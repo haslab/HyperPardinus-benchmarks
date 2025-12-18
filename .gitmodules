@@ -1,3 +1,9 @@
 [submodule "AutoHyper"]
 	path = AutoHyper
 	url = https://github.com/hpacheco/AutoHyper
+[submodule "HyperPardinus"]
+	path = HyperPardinus
+	url = https://github.com/haslab/HyperPardinus
+[submodule "HyperSMV"]
+	path = HyperSMV
+	url = https://github.com/haslab/HyperSMV

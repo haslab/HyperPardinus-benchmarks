@@ -23,9 +23,14 @@ Then, to reproduce either our low-level benchmarks or our high-level benchmarks,
 ```
 ./benchs.py doLow
 ./benchs.py doHigh
+./benchs.py doAblation --group=low --mode=Exp
+./benchs.py doAblation --group=low --mode=Sym
+./benchs.py doAblation --group=high --mode=Exp
+./benchs.py doAblation --group=high --mode=Sym
 ```
 
-Any arising errors are written to the `logs` folder.
+If you get a `ncurses` error, please make sure that your terminal window is as large as possible.
+Any errors arising when running each benchmark are written to the `logs` folder.
 
 ## GUI
 
