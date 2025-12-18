@@ -1,0 +1,69 @@
+MODULE main
+VAR
+MAX_ticket : 0..3;
+p1_line : 0..4;
+p1_ticket : 0..3;
+p2_line : 0..4;
+p2_ticket : 0..3;
+p3_line : 0..4;
+p3_ticket : 0..3;
+DEFINE
+STARTED := ((p2_line != 0) | (p3_line != 0) | (p1_line != 0));
+p1-TOKEN := ((p1_ticket <= p3_ticket) & (p1_ticket <= p2_ticket) & STARTED & (p1_line = 2));
+p2-TOKEN := ((p2_line = 2) & (((p2_ticket <= p1_ticket) & (p2_ticket <= p3_ticket)) | (! p1-TOKEN)) & STARTED);
+p3-TOKEN := ((p3_line = 2) & (((p3_ticket <= p1_ticket) & (p3_ticket <= p2_ticket)) | ((! p1-TOKEN) & (! p2-TOKEN))) & STARTED);
+ASSIGN
+    init(MAX_ticket) := 0;
+    init(p1_line) := 0;
+    init(p1_ticket) := 3;
+    init(p2_line) := 0;
+    init(p2_ticket) := 3;
+    init(p3_line) := 0;
+    init(p3_ticket) := 3;
+    next(MAX_ticket) := case
+        (MAX_ticket = 3) : 0;
+        ((p2_line = 1) | (p3_line = 1) | (p1_line = 1)) : (MAX_ticket + 1);
+        (TRUE) : MAX_ticket;
+        esac;
+    next(p1_line) := case
+        (p1_line = 0) : {0 , 1};
+        (p1_line = 1) : 2;
+        ((p1_line = 2) & (! p1-TOKEN)) : 2;
+        ((p1_line = 2) & p1-TOKEN) : 3;
+        (p1_line = 3) : 4;
+        (p1_line = 4) : 0;
+        (TRUE) : p1_line;
+        esac;
+    next(p1_ticket) := case
+        (MAX_ticket = 3) : 0;
+        (p1_line = 1) : (MAX_ticket + 1);
+        (TRUE) : p1_ticket;
+        esac;
+    next(p2_line) := case
+        (p2_line = 0) : {0 , 1};
+        (p2_line = 1) : 2;
+        ((p2_line = 2) & (! p2-TOKEN)) : 2;
+        ((p2_line = 2) & p2-TOKEN) : 3;
+        (p2_line = 3) : 4;
+        (p2_line = 4) : 0;
+        (TRUE) : p2_line;
+        esac;
+    next(p2_ticket) := case
+        (MAX_ticket = 3) : 0;
+        (p2_line = 1) : (MAX_ticket + 1);
+        (TRUE) : p2_ticket;
+        esac;
+    next(p3_line) := case
+        (p3_line = 0) : 0;
+        (p3_line = 1) : 2;
+        ((p3_line = 2) & (! p3-TOKEN)) : 2;
+        ((p3_line = 2) & p3-TOKEN) : 3;
+        (p3_line = 3) : 4;
+        (p3_line = 4) : 0;
+        (TRUE) : p3_line;
+        esac;
+    next(p3_ticket) := case
+        (MAX_ticket = 3) : 0;
+        (p3_line = 1) : (MAX_ticket + 1);
+        (TRUE) : p3_ticket;
+        esac;

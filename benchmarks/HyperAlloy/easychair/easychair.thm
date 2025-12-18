@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view nodetheme="Martha" edgetheme="Martha">
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="Accept"/>
+   <type name="Agent"/>
+   <type name="CMS2"/>
+   <type name="Int"/>
+   <type name="Major"/>
+   <type name="Reject"/>
+   <type name="Reviewer"/>
+   <type name="String"/>
+   <type name="univ"/>
+   <type name="ordering/Ord"/>
+   <type name="seq/Int"/>
+   <set name="$first" type="Decision"/>
+   <set name="$last" type="Decision"/>
+</node>
+
+<node hideunconnected="yes" color="Blue">
+   <type name="Article"/>
+</node>
+
+<node hideunconnected="yes" color="Green" label="D">
+   <type name="Decision"/>
+</node>
+
+<edge visible="no">
+   <relation name="$next"> <type name="Decision"/> <type name="Decision"/> </relation>
+   <relation name="$prev"> <type name="Decision"/> <type name="Decision"/> </relation>
+</edge>
+
+</view>
+
+</alloy>

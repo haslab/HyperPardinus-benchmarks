@@ -1,0 +1,75 @@
+{ "path" : "HyperAlloy"
+, "benchs" : {
+    "easychair_any_ni_0":
+    { "prop" : "easychair/easychair_any.als"
+    , "cmd" : 0, "k" : 4, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "ahOptsWitness" : "--ahsolver=forklift", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "easychair_any_ni_1":
+    { "prop" : "easychair/easychair_any.als"
+    , "cmd" : 1, "k" : 6, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "easychair_any_gni_2":
+    { "prop" : "easychair/easychair_any.als"
+    , "cmd" : 2, "k" : 4, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--splitinits=partial --ahsolver=forq", "ahOptsWitness" : "--splitinits=partial --ahsolver=forklift", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "easychair_any_gni_3":
+    { "prop" : "easychair/easychair_any.als"
+    , "cmd" : 3, "k" : 5, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--splitinits=partial --ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "easychair_ndet_ni_0":
+    { "prop" : "easychair/easychair_ndet.als"
+    , "cmd" : 0, "k" : 6, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "ahOptsWitness" : "--ahsolver=forklift", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "easychair_ndet_ni_1":
+    { "prop" : "easychair/easychair_ndet.als"
+    , "cmd" : 1, "k" : 6, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "easychair_ndet_gni_2":
+    { "prop" : "easychair/easychair_ndet.als"
+    , "cmd" : 2, "k" : 4, "sem" : "opt" , "expected" : true, "expectsWitness": false, "ahOpts" : "--splitinits=partial --ahsolver=forq", "ahOptsWitness": "--splitinits=partial --ahsolver=forklift", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "easychair_ndet_gni_3":
+    { "prop" : "easychair/easychair_ndet.als"
+    , "cmd" : 3, "k" : 5, "sem" : "opt" , "expected" : true, "expectsWitness": false, "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "easychair_max_ni_0":
+    { "prop" : "easychair/easychair_max.als"
+    , "cmd" : 0, "k" : 6, "sem" : "opt" , "expected" : true, "expectsWitness": false, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "easychair_max_ni_1":
+    { "prop" : "easychair/easychair_max.als"
+    , "cmd" : 1, "k" : 6, "sem" : "opt" , "expected" : true, "expectsWitness": false, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "easychair_max_gni_2":
+    { "prop" : "easychair/easychair_max.als"
+    , "cmd" : 2, "k" : 4, "sem" : "opt" , "expected" : true, "expectsWitness": false, "ahOpts" : "--splitinits=partial --ahsolver=forq", "ahOptsWitness": "--splitinits=partial --ahsolver=forklift", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "easychair_max_gni_3":
+    { "prop" : "easychair/easychair_max.als"
+    , "cmd" : 3, "k" : 5, "sem" : "opt" , "expected" : true, "expectsWitness": false, "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "mutations_sat_sat_pkill_0":
+    { "prop" : "mutations/mutations_sat_sat.als"
+    , "cmd" : 0, "k" : 6, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "mutations_sat_sat_dkill_1":
+    { "prop" : "mutations/mutations_sat_sat.als"
+    , "cmd" : 1, "k" : 6, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "mutations_sat_unsat_pkill_0":
+    { "prop" : "mutations/mutations_sat_unsat.als"
+    , "cmd" : 0, "k" : 6, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "mutations_sat_unsat_dkill_1":
+    { "prop" : "mutations/mutations_sat_unsat.als"
+    , "cmd" : 1, "k" : 6, "sem" : "opt", "expected" : true, "expectsWitness": false, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "mutations_unsat_unsat_pkill_0":
+    { "prop" : "mutations/mutations_unsat_unsat.als"
+    , "cmd" : 0, "k" : 6, "sem" : "opt", "expected" : true, "expectsWitness": false, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "mutations_unsat_unsat_dkill_1":
+    { "prop" : "mutations/mutations_unsat_unsat.als"
+    , "cmd" : 1, "k" : 6, "sem" : "opt", "expected" : true, "expectsWitness": false, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    
+    "robot_enemies":
+    { "prop" : "robot/robot_enemies.als"
+    , "cmd" : 0, "k" : 20, "sem" : "hpes" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=spot", "ahOptsWitness" : "--ahsolver=forklift", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "robot_robust":
+    { "prop" : "robot/robot_robust.als"
+    , "cmd" : 0, "k": 20, "sem":"pes", "expected" : false, "expectsWitness": true, "ahOpts" : "--aps=ddsmall --ahsolver=forq", "ahOptsWitness" : "--aps=ddsmall --ahsolver=roll", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "robot_score":
+    { "prop" : "robot/robot_score.als"
+    , "cmd" : 0, "k": 20, "sem":"pes", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=spot", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "robot_shortest":
+    { "prop" : "robot/robot_shortest.als"
+    , "cmd" : 0, "k" : 20, "sem" : "pes" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=spot", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
+    "robot_two":
+    { "prop" : "robot/robot_robust.als"
+    , "cmd" : 1, "k" : 20, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=spot", "qbfOpts": " --splitformula=invar", "alloyOpts" : { "AutoHyper" : "--compositionoff" } }
+    
+    }
+}

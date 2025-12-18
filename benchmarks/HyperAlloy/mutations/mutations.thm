@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view nodetheme="Martha" edgetheme="Martha">
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="Coffee"/>
+   <type name="Fill"/>
+   <type name="Int"/>
+   <type name="Machine"/>
+   <type name="Req"/>
+   <type name="String"/>
+   <type name="Tea"/>
+   <type name="univ"/>
+   <type name="open$4/Ord"/>
+   <type name="ordering/Ord"/>
+   <type name="seq/Int"/>
+   <type name="natural/ord/Ord"/>
+   <set name="$first" type="Input"/>
+   <set name="$last" type="Input"/>
+   <set name="One" type="natural/Natural"/>
+   <set name="Zero" type="natural/Natural"/>
+</node>
+
+<node hideunconnected="yes" shape="Ellipse" color="White">
+   <type name="natural/Natural"/>
+</node>
+
+<node hideunconnected="yes" shape="House" color="Green">
+   <type name="Output"/>
+</node>
+
+<node hideunconnected="yes" shape="Inv House" color="Blue">
+   <type name="Input"/>
+</node>
+
+<node showlabel="no">
+   <set name="$first" type="Output"/>
+   <set name="$first" type="natural/Natural"/>
+   <set name="$last" type="Output"/>
+   <set name="$last" type="natural/Natural"/>
+</node>
+
+<edge style="inherit">
+   <relation name="input"> <type name="Machine"/> <type name="Input"/> </relation>
+   <relation name="output"> <type name="Machine"/> <type name="Output"/> </relation>
+   <relation name="water"> <type name="Machine"/> <type name="natural/Natural"/> </relation>
+</edge>
+
+<edge visible="no">
+   <relation name="$next"> <type name="Input"/> <type name="Input"/> </relation>
+   <relation name="$next"> <type name="Output"/> <type name="Output"/> </relation>
+   <relation name="$next"> <type name="natural/Natural"/> <type name="natural/Natural"/> </relation>
+   <relation name="$prev"> <type name="Input"/> <type name="Input"/> </relation>
+   <relation name="$prev"> <type name="Output"/> <type name="Output"/> </relation>
+   <relation name="$prev"> <type name="natural/Natural"/> <type name="natural/Natural"/> </relation>
+</edge>
+
+</view>
+
+</alloy>

@@ -1,0 +1,328 @@
+MODULE main
+VAR
+AllNodes_0_0 : 0..2;
+AllNodes_0_1 : 0..2;
+AllNodes_1_0 : 0..2;
+AllNodes_1_1 : 0..2;
+AllNodes_2_0 : 0..2;
+AllNodes_2_1 : 0..2;
+First_ProcID : 1..2;
+LeftHat : 0..2;
+RightHat : 0..2;
+Second_ProcID : 1..2;
+newnode : 0..2;
+popRightFAIL : boolean;
+proc1.line : 0..26;
+proc1.local_popL_LH : 0..2;
+proc1.local_popL_LHR : 0..2;
+proc1.local_popL_RH : 0..2;
+proc1.local_popR_LH : 0..2;
+proc1.local_popR_RH : 0..2;
+proc1.local_popR_RHL : 0..2;
+proc1.local_pushR_LH : 0..2;
+proc1.local_pushR_RH : 0..2;
+proc1.local_pushR_RHR : 0..2;
+proc2.line : 0..26;
+proc2.local_popL_LH : 0..2;
+proc2.local_popL_LHR : 0..2;
+proc2.local_popL_RH : 0..2;
+proc2.local_popR_LH : 0..2;
+proc2.local_popR_RH : 0..2;
+proc2.local_popR_RHL : 0..2;
+proc2.local_pushR_LH : 0..2;
+proc2.local_pushR_RH : 0..2;
+proc2.local_pushR_RHR : 0..2;
+DEFINE
+BOTH_MODIFYING := (proc1.modifying & proc2.modifying);
+FAIL := (((proc1.line = 8) & ((! ((proc1.local_popR_RH = 2) -> (AllNodes_2_0 = proc1.local_popR_RHL))) | (! (RightHat = proc1.local_popR_RH)) | (! ((proc1.local_popR_RH = 1) -> (AllNodes_1_0 = proc1.local_popR_RHL))))) | ((proc1.line = 5) & ((! (RightHat = proc1.local_popR_RH)) | (! (LeftHat = proc1.local_popR_LH)))) | ((proc1.line = 22) & ((! (RightHat = proc1.local_popL_RH)) | (! (LeftHat = proc1.local_popL_LH)))) | ((proc1.line = 25) & ((! ((proc1.local_popL_LH = 2) -> (AllNodes_2_1 = proc1.local_popL_LHR))) | (! (LeftHat = proc1.local_popL_LH)) | (! ((proc1.local_popL_LH = 1) -> (AllNodes_1_1 = proc1.local_popL_LHR))))) | ((proc1.line = 13) & (RightHat = 2)) | ((proc2.line = 13) & (RightHat = 2)) | BOTH_MODIFYING | ((RightHat = 0) & (proc2.line = 20) & (RightHat = 0)));
+proc1.modifying := ((proc1.line = 8) | (proc1.line = 5) | (proc1.line = 14) | (proc1.line = 17) | (proc1.line = 16) | (proc1.line = 11) | (proc1.line = 25) | (proc1.line = 22));
+proc1.popLeftEND := (proc1.line = 0);
+proc1.popLeftSTART := ((proc1.line = 20) | (proc1.line = 19) | (proc1.line = 21) | (proc1.line = 22) | (proc1.line = 23) | (proc1.line = 24) | (proc1.line = 26) | (proc1.line = 25));
+proc1.popRightEND := (proc1.line = 0);
+proc1.popRightSTART := ((proc1.line = 2) | (proc1.line = 1) | (proc1.line = 3) | (proc1.line = 4) | (proc1.line = 5) | (proc1.line = 6) | (proc1.line = 7) | (proc1.line = 9) | (proc1.line = 8));
+proc1.pushRightEND := (proc1.line = 0);
+proc1.pushRightSTART := ((proc1.line = 11) | (proc1.line = 10) | (proc1.line = 12) | (proc1.line = 13) | (proc1.line = 14) | (proc1.line = 15) | (proc1.line = 16) | (proc1.line = 18) | (proc1.line = 17));
+proc2.modifying := ((proc2.line = 8) | (proc2.line = 5) | (proc2.line = 14) | (proc2.line = 17) | (proc2.line = 16) | (proc2.line = 11) | (proc2.line = 25) | (proc2.line = 22));
+proc2.popLeftEND := (proc2.line = 0);
+proc2.popLeftSTART := ((proc2.line = 20) | (proc2.line = 19) | (proc2.line = 21) | (proc2.line = 22) | (proc2.line = 23) | (proc2.line = 24) | (proc2.line = 26) | (proc2.line = 25));
+proc2.popRightEND := (proc2.line = 0);
+proc2.popRightSTART := ((proc2.line = 2) | (proc2.line = 1) | (proc2.line = 3) | (proc2.line = 4) | (proc2.line = 5) | (proc2.line = 6) | (proc2.line = 7) | (proc2.line = 9) | (proc2.line = 8));
+proc2.pushRightEND := (proc2.line = 0);
+proc2.pushRightSTART := ((proc2.line = 11) | (proc2.line = 10) | (proc2.line = 12) | (proc2.line = 13) | (proc2.line = 14) | (proc2.line = 15) | (proc2.line = 16) | (proc2.line = 18) | (proc2.line = 17));
+ASSIGN
+    init(AllNodes_0_0) := 0;
+    init(AllNodes_0_1) := 0;
+    init(AllNodes_1_0) := 0;
+    init(AllNodes_1_1) := 0;
+    init(AllNodes_2_0) := 2;
+    init(AllNodes_2_1) := 2;
+    init(First_ProcID) := 1;
+    init(LeftHat) := 1;
+    init(RightHat) := 1;
+    init(Second_ProcID) := 2;
+    init(newnode) := 2;
+    init(popRightFAIL) := FALSE;
+    init(proc1.line) := 0;
+    init(proc1.local_popL_LH) := 0;
+    init(proc1.local_popL_LHR) := 0;
+    init(proc1.local_popL_RH) := 0;
+    init(proc1.local_popR_LH) := 0;
+    init(proc1.local_popR_RH) := 0;
+    init(proc1.local_popR_RHL) := 0;
+    init(proc1.local_pushR_LH) := 0;
+    init(proc1.local_pushR_RH) := 0;
+    init(proc1.local_pushR_RHR) := 0;
+    init(proc2.line) := 0;
+    init(proc2.local_popL_LH) := 0;
+    init(proc2.local_popL_LHR) := 0;
+    init(proc2.local_popL_RH) := 0;
+    init(proc2.local_popR_LH) := 0;
+    init(proc2.local_popR_RH) := 0;
+    init(proc2.local_popR_RHL) := 0;
+    init(proc2.local_pushR_LH) := 0;
+    init(proc2.local_pushR_RH) := 0;
+    init(proc2.local_pushR_RHR) := 0;
+    next(AllNodes_0_0) := AllNodes_0_0;
+    next(AllNodes_0_1) := AllNodes_0_1;
+    next(AllNodes_1_0) := case
+        (BOTH_MODIFYING) : AllNodes_1_0;
+        ((proc1.local_popR_RH = 1) & (proc1.line = 8) & (! FAIL)) : 1;
+        ((LeftHat = 1) & (proc1.line = 26) & (proc1.local_popL_LH = 1)) : 0;
+        ((proc2.local_popR_RH = 1) & (proc2.line = 8) & (! FAIL)) : 1;
+        ((LeftHat = 1) & (proc2.line = 26) & (proc2.local_popL_LH = 1)) : 0;
+        (TRUE) : AllNodes_1_0;
+        esac;
+    next(AllNodes_1_1) := case
+        (BOTH_MODIFYING) : AllNodes_1_1;
+        ((proc1.line = 17) & (proc1.local_pushR_RH = 1)) : 2;
+        ((proc1.local_popL_LH = 1) & (proc1.line = 25) & (! FAIL)) : 1;
+        ((RightHat = 1) & (proc1.line = 9) & (proc1.local_popR_RH = 1)) : 0;
+        ((proc2.line = 17) & (proc2.local_pushR_RH = 1)) : 2;
+        ((proc2.local_popL_LH = 1) & (proc2.line = 25) & (! FAIL)) : 1;
+        ((RightHat = 1) & (proc2.line = 9) & (proc2.local_popR_RH = 1)) : 0;
+        (TRUE) : AllNodes_1_1;
+        esac;
+    next(AllNodes_2_0) := case
+        (BOTH_MODIFYING) : AllNodes_2_0;
+        ((proc1.local_popR_RH = 2) & (proc1.line = 8) & (! FAIL)) : 2;
+        ((LeftHat = 2) & (proc1.line = 26) & (proc1.local_popL_LH = 2)) : 0;
+        ((proc1.line = 16) & (proc1.local_pushR_RH = 1)) : 1;
+        ((proc1.line = 16) & (proc1.local_pushR_RH = 2)) : 2;
+        ((proc2.local_popR_RH = 2) & (proc2.line = 8) & (! FAIL)) : 2;
+        ((LeftHat = 2) & (proc2.line = 26) & (proc2.local_popL_LH = 2)) : 0;
+        ((proc2.line = 16) & (proc2.local_pushR_RH = 1)) : 1;
+        ((proc2.line = 16) & (proc2.local_pushR_RH = 2)) : 2;
+        (TRUE) : AllNodes_2_0;
+        esac;
+    next(AllNodes_2_1) := case
+        (BOTH_MODIFYING) : AllNodes_2_1;
+        (proc1.line = 11) : 0;
+        ((RightHat = 2) & (proc1.line = 9) & (proc1.local_popR_RH = 2)) : 0;
+        ((proc1.local_popL_LH = 2) & (proc1.line = 25) & (! FAIL)) : 2;
+        (proc2.line = 11) : 0;
+        ((RightHat = 2) & (proc1.line = 9) & (proc1.local_popR_RH = 2)) : 0;
+        ((proc2.local_popL_LH = 2) & (proc2.line = 25) & (! FAIL)) : 2;
+        (TRUE) : AllNodes_2_1;
+        esac;
+    next(First_ProcID) := First_ProcID;
+    next(LeftHat) := case
+        (BOTH_MODIFYING) : LeftHat;
+        (((proc1.line = 5) & (! FAIL)) | ((proc2.line = 5) & (! FAIL))) : 0;
+        (((proc1.line = 22) & (RightHat = proc1.local_popL_RH)) | ((proc2.line = 22) & (RightHat = proc2.local_popL_RH))) : 0;
+        ((proc1.line = 25) & (proc1.local_popL_LHR = 0)) : 0;
+        ((proc1.line = 25) & (proc1.local_popL_LHR = 1)) : 1;
+        ((proc1.line = 25) & (proc1.local_popL_LHR = 2)) : 2;
+        ((proc2.line = 25) & (proc2.local_popL_LHR = 0)) : 0;
+        ((proc2.line = 25) & (proc2.local_popL_LHR = 1)) : 1;
+        ((proc2.line = 25) & (proc2.local_popL_LHR = 2)) : 2;
+        ((proc1.line = 14) | (proc2.line = 14)) : 2;
+        (TRUE) : LeftHat;
+        esac;
+    next(RightHat) := case
+        (BOTH_MODIFYING) : RightHat;
+        (((proc1.line = 5) & (! FAIL)) | ((proc2.line = 5) & (! FAIL))) : 0;
+        (((proc1.line = 22) & (RightHat = proc1.local_popL_RH)) | ((proc2.line = 22) & (RightHat = proc2.local_popL_RH))) : 0;
+        ((proc1.local_popR_RHL = 0) & (proc1.line = 8) & (! FAIL)) : 0;
+        ((proc1.local_popR_RHL = 1) & (proc1.line = 8) & (! FAIL)) : 1;
+        ((proc1.local_popR_RHL = 2) & (proc1.line = 8) & (! FAIL)) : 2;
+        ((proc2.local_popR_RHL = 0) & (proc2.line = 8) & (! FAIL)) : 0;
+        ((proc2.local_popR_RHL = 1) & (proc2.line = 8) & (! FAIL)) : 1;
+        ((proc2.local_popR_RHL = 2) & (proc2.line = 8) & (! FAIL)) : 2;
+        ((proc1.line = 14) | (proc2.line = 14)) : 2;
+        (((proc1.line = 16) & (RightHat = proc1.local_pushR_RH)) | ((proc2.line = 16) & (RightHat = proc2.local_pushR_RH))) : 2;
+        (TRUE) : RightHat;
+        esac;
+    next(Second_ProcID) := Second_ProcID;
+    next(newnode) := newnode;
+    next(popRightFAIL) := case
+        ((proc1.line = 3) & (proc1.local_popR_RH = 1) & (AllNodes_1_1 = 1)) : TRUE;
+        ((proc1.line = 3) & (proc1.local_popR_RH = 2) & (AllNodes_2_1 = 2)) : TRUE;
+        ((proc2.line = 3) & (proc2.local_popR_RH = 0)) : TRUE;
+        (TRUE) : popRightFAIL;
+        esac;
+    next(proc1.line) := case
+        ((proc1.line = 0) & (First_ProcID = 1)) : 1;
+        ((proc1.line = 0) & (First_ProcID = 2)) : {10 , 19};
+        ((proc1.line = 1) & (First_ProcID = 2)) : 1;
+        ((proc1.line = 1) & (First_ProcID = 1)) : 2;
+        ((LeftHat = 1) & (proc1.line = 2) & (First_ProcID = 1) & (RightHat = 1)) : {2 , 3};
+        ((LeftHat = 1) & (proc1.line = 2) & (First_ProcID = 1) & (RightHat = 2)) : {2 , 3};
+        ((AllNodes_1_1 = 1) & (proc1.line = 3) & (proc1.local_popR_RH = 1)) : 0;
+        ((AllNodes_2_1 = 2) & (proc1.line = 3) & (proc1.local_popR_RH = 2)) : 0;
+        (((proc1.line = 3) & (! ((proc1.local_popR_RH = 1) & (AllNodes_1_1 = 1)))) | ((proc1.local_popR_RH = 2) & (AllNodes_1_1 = 2))) : 4;
+        ((proc1.line = 4) & (proc1.local_popR_RH = 1) & (proc1.local_popR_LH = 1)) : 5;
+        ((proc1.line = 4) & (proc1.local_popR_RH = 2) & (proc1.local_popR_LH = 2)) : 5;
+        (proc1.line = 5) : 6;
+        (proc1.line = 6) : 0;
+        ((proc1.line = 4) & (! ((proc1.local_popR_RH = 1) & (proc1.local_popR_LH = 1)))) : 7;
+        ((proc1.line = 4) & (! ((proc1.local_popR_RH = 2) & (proc1.local_popR_LH = 2)))) : 7;
+        (proc1.line = 7) : 8;
+        (proc1.line = 8) : 9;
+        (proc1.line = 9) : 0;
+        (proc1.line = 10) : 11;
+        (proc1.line = 11) : 12;
+        (proc1.line = 12) : 13;
+        ((proc1.line = 13) & (proc1.local_pushR_RH = proc1.local_pushR_RHR)) : 14;
+        (proc1.line = 14) : 15;
+        (proc1.line = 15) : 0;
+        ((proc1.line = 13) & (! (proc1.local_pushR_RH = proc1.local_pushR_RHR))) : 16;
+        (proc1.line = 16) : 17;
+        (proc1.line = 17) : 18;
+        (proc1.line = 18) : 0;
+        (proc1.line = 19) : 20;
+        (proc1.line = 20) : 21;
+        ((proc1.line = 21) & (proc1.local_popL_LH = proc1.local_popL_RH)) : 22;
+        (proc1.line = 22) : 23;
+        (proc1.line = 23) : 0;
+        ((proc1.line = 21) & (! (proc1.local_popL_LH = proc1.local_popL_RH))) : 24;
+        (proc1.line = 24) : 25;
+        (proc1.line = 25) : 26;
+        (proc1.line = 26) : 0;
+        (TRUE) : proc1.line;
+        esac;
+    next(proc1.local_popL_LH) := case
+        (proc1.line = 19) : LeftHat;
+        (TRUE) : proc1.local_popL_LH;
+        esac;
+    next(proc1.local_popL_LHR) := case
+        ((proc1.line = 24) & (proc1.local_popL_LH = 0)) : AllNodes_0_1;
+        ((proc1.line = 24) & (proc1.local_popL_LH = 1)) : AllNodes_1_1;
+        ((proc1.line = 24) & (proc1.local_popL_LH = 2)) : AllNodes_2_1;
+        (TRUE) : proc1.local_popL_LHR;
+        esac;
+    next(proc1.local_popL_RH) := case
+        (proc1.line = 19) : RightHat;
+        (TRUE) : proc1.local_popL_RH;
+        esac;
+    next(proc1.local_popR_LH) := case
+        (proc1.line = 2) : LeftHat;
+        (TRUE) : proc1.local_popR_LH;
+        esac;
+    next(proc1.local_popR_RH) := case
+        (proc1.line = 1) : RightHat;
+        (TRUE) : proc1.local_popR_RH;
+        esac;
+    next(proc1.local_popR_RHL) := case
+        (! (proc1.line = 7)) : proc1.local_popR_RHL;
+        ((proc1.line = 7) & (proc1.local_popR_RH = 0)) : AllNodes_0_0;
+        ((proc1.line = 7) & (proc1.local_popR_RH = 1)) : AllNodes_1_0;
+        ((proc1.line = 7) & (proc1.local_popR_RH = 2)) : AllNodes_2_0;
+        (TRUE) : proc1.local_popR_RHL;
+        esac;
+    next(proc1.local_pushR_LH) := case
+        ((proc1.line = 13) & (proc1.local_pushR_RH = proc1.local_pushR_RHR)) : LeftHat;
+        (TRUE) : proc1.local_pushR_LH;
+        esac;
+    next(proc1.local_pushR_RH) := case
+        (proc1.line = 12) : RightHat;
+        (TRUE) : proc1.local_pushR_RH;
+        esac;
+    next(proc1.local_pushR_RHR) := case
+        ((proc1.line = 12) & (proc1.local_pushR_RH = 0)) : AllNodes_0_1;
+        ((proc1.line = 12) & (proc1.local_pushR_RH = 1)) : AllNodes_1_1;
+        ((proc1.line = 12) & (proc1.local_pushR_RH = 2)) : AllNodes_2_1;
+        (TRUE) : proc1.local_pushR_RHR;
+        esac;
+    next(proc2.line) := case
+        ((proc2.line = 0) & (Second_ProcID = 1)) : 1;
+        ((proc2.line = 0) & (Second_ProcID = 2)) : {10 , 19};
+        ((proc2.line = 1) & (Second_ProcID = 2)) : 1;
+        ((proc2.line = 1) & (Second_ProcID = 1)) : 2;
+        ((LeftHat = 1) & (proc2.line = 2) & (Second_ProcID = 1) & (RightHat = 1)) : {2 , 3};
+        ((LeftHat = 1) & (proc2.line = 2) & (Second_ProcID = 1) & (RightHat = 2)) : {2 , 3};
+        ((AllNodes_1_1 = 1) & (proc2.line = 3) & (proc2.local_popR_RH = 1)) : 0;
+        ((AllNodes_2_1 = 2) & (proc2.line = 3) & (proc2.local_popR_RH = 2)) : 0;
+        (((proc2.line = 3) & (! ((proc2.local_popR_RH = 1) & (AllNodes_1_1 = 1)))) | ((proc2.local_popR_RH = 2) & (AllNodes_1_1 = 2))) : 4;
+        ((proc2.line = 4) & (proc2.local_popR_RH = 1) & (proc2.local_popR_LH = 1)) : 5;
+        ((proc2.line = 4) & (proc2.local_popR_RH = 2) & (proc2.local_popR_LH = 2)) : 5;
+        (proc2.line = 5) : 6;
+        (proc2.line = 6) : 0;
+        ((proc2.line = 4) & (! ((proc2.local_popR_RH = 1) & (proc2.local_popR_LH = 1)))) : 7;
+        ((proc2.line = 4) & (! ((proc2.local_popR_RH = 2) & (proc2.local_popR_LH = 2)))) : 7;
+        (proc2.line = 7) : 8;
+        (proc2.line = 8) : 9;
+        (proc2.line = 9) : 0;
+        (proc2.line = 10) : 11;
+        (proc2.line = 11) : 12;
+        (proc2.line = 12) : 13;
+        ((proc2.line = 13) & (proc2.local_pushR_RH = proc2.local_pushR_RHR)) : 14;
+        (proc2.line = 14) : 15;
+        (proc2.line = 15) : 0;
+        ((proc2.line = 13) & (! (proc2.local_pushR_RH = proc2.local_pushR_RHR))) : 16;
+        (proc2.line = 16) : 17;
+        (proc2.line = 17) : 18;
+        (proc2.line = 18) : 0;
+        (proc2.line = 19) : 20;
+        (proc2.line = 20) : 21;
+        ((proc2.line = 21) & (proc2.local_popL_LH = proc2.local_popL_RH)) : 22;
+        (proc2.line = 22) : 23;
+        (proc2.line = 23) : 0;
+        ((proc2.line = 21) & (! (proc2.local_popL_LH = proc2.local_popL_RH))) : 24;
+        (proc2.line = 24) : 25;
+        (proc2.line = 25) : 26;
+        (proc2.line = 26) : 0;
+        (TRUE) : proc2.line;
+        esac;
+    next(proc2.local_popL_LH) := case
+        (proc2.line = 19) : LeftHat;
+        (TRUE) : proc2.local_popL_LH;
+        esac;
+    next(proc2.local_popL_LHR) := case
+        ((proc2.line = 24) & (proc2.local_popL_LH = 0)) : AllNodes_0_1;
+        ((proc2.line = 24) & (proc2.local_popL_LH = 1)) : AllNodes_1_1;
+        ((proc2.line = 24) & (proc2.local_popL_LH = 2)) : AllNodes_2_1;
+        (TRUE) : proc2.local_popL_LHR;
+        esac;
+    next(proc2.local_popL_RH) := case
+        (proc2.line = 19) : RightHat;
+        (TRUE) : proc2.local_popL_RH;
+        esac;
+    next(proc2.local_popR_LH) := case
+        (proc2.line = 2) : LeftHat;
+        (TRUE) : proc2.local_popR_LH;
+        esac;
+    next(proc2.local_popR_RH) := case
+        (proc2.line = 1) : RightHat;
+        (TRUE) : proc2.local_popR_RH;
+        esac;
+    next(proc2.local_popR_RHL) := case
+        (! (proc2.line = 7)) : proc2.local_popR_RHL;
+        ((proc2.line = 7) & (proc2.local_popR_RH = 0)) : AllNodes_0_0;
+        ((proc2.line = 7) & (proc2.local_popR_RH = 1)) : AllNodes_1_0;
+        ((proc2.line = 7) & (proc2.local_popR_RH = 2)) : AllNodes_2_0;
+        (TRUE) : proc2.local_popR_RHL;
+        esac;
+    next(proc2.local_pushR_LH) := case
+        ((proc2.line = 13) & (proc2.local_pushR_RH = proc2.local_pushR_RHR)) : LeftHat;
+        (TRUE) : proc2.local_pushR_LH;
+        esac;
+    next(proc2.local_pushR_RH) := case
+        (proc2.line = 12) : RightHat;
+        (TRUE) : proc2.local_pushR_RH;
+        esac;
+    next(proc2.local_pushR_RHR) := case
+        ((proc2.line = 12) & (proc2.local_pushR_RH = 0)) : AllNodes_0_1;
+        ((proc2.line = 12) & (proc2.local_pushR_RH = 1)) : AllNodes_1_1;
+        ((proc2.line = 12) & (proc2.local_pushR_RH = 2)) : AllNodes_2_1;
+        (TRUE) : proc2.local_pushR_RHR;
+        esac;

@@ -1,0 +1,145 @@
+MODULE main
+VAR
+AllNodes_0_0 : 0..2;
+AllNodes_0_1 : 0..2;
+AllNodes_1_0 : 0..2;
+AllNodes_1_1 : 0..2;
+AllNodes_2_0 : 0..2;
+AllNodes_2_1 : 0..2;
+First_ProcID : 1..2;
+LeftHat : 0..2;
+RightHat : 0..2;
+Second_ProcID : 1..2;
+newnode : 0..2;
+popRightFAIL : boolean;
+proc1.line : 0..9;
+proc2.line : 0..9;
+temp_popRightFAIL : boolean;
+DEFINE
+BOTH_MODIFYING := (proc1.modifying & proc2.modifying);
+proc1.modifying := ((proc1.line = 7) | (proc1.line = 1) | (proc1.line = 4));
+proc1.popLeftEND := (proc1.line = 0);
+proc1.popLeftSTART := ((proc1.line = 7) | (proc1.line = 8));
+proc1.popRightEND := (proc1.line = 0);
+proc1.popRightSTART := ((proc1.line = 3) | (proc1.line = 1) | (proc1.line = 2));
+proc1.pushRightEND := (proc1.line = 0);
+proc1.pushRightSTART := ((proc1.line = 4) | (proc1.line = 5));
+proc2.modifying := ((proc2.line = 7) | (proc2.line = 1) | (proc2.line = 4));
+proc2.popLeftEND := (proc2.line = 0);
+proc2.popLeftSTART := ((proc2.line = 7) | (proc2.line = 8));
+proc2.popRightEND := (proc2.line = 0);
+proc2.popRightSTART := ((proc2.line = 3) | (proc2.line = 1) | (proc2.line = 2));
+proc2.pushRightEND := (proc2.line = 0);
+proc2.pushRightSTART := ((proc2.line = 4) | (proc2.line = 5));
+ASSIGN
+    init(AllNodes_0_0) := 0;
+    init(AllNodes_0_1) := 0;
+    init(AllNodes_1_0) := 0;
+    init(AllNodes_1_1) := 0;
+    init(AllNodes_2_0) := 2;
+    init(AllNodes_2_1) := 2;
+    init(First_ProcID) := 1;
+    init(LeftHat) := 1;
+    init(RightHat) := 1;
+    init(Second_ProcID) := 2;
+    init(newnode) := 2;
+    init(popRightFAIL) := FALSE;
+    init(proc1.line) := 0;
+    init(proc2.line) := 0;
+    init(temp_popRightFAIL) := FALSE;
+    next(AllNodes_0_0) := AllNodes_0_0;
+    next(AllNodes_0_1) := AllNodes_0_1;
+    next(AllNodes_1_0) := case
+        (TRUE) : AllNodes_1_0;
+        esac;
+    next(AllNodes_1_1) := case
+        (BOTH_MODIFYING) : AllNodes_1_1;
+        ((proc1.line = 1) & (RightHat = 1)) : 1;
+        ((proc1.line = 4) & (RightHat = 1)) : 2;
+        ((proc1.line = 7) & (LeftHat = 1)) : 1;
+        ((proc2.line = 1) & (RightHat = 1)) : 1;
+        ((proc2.line = 4) & (RightHat = 1)) : 2;
+        ((proc2.line = 7) & (LeftHat = 1)) : 1;
+        (TRUE) : AllNodes_1_1;
+        esac;
+    next(AllNodes_2_0) := case
+        (BOTH_MODIFYING) : AllNodes_2_0;
+        ((proc1.line = 1) & (RightHat = 2)) : 2;
+        ((proc1.line = 4) & (RightHat = 1)) : 1;
+        ((proc1.line = 7) & (LeftHat = 1)) : 0;
+        ((proc2.line = 1) & (RightHat = 2)) : 2;
+        ((proc2.line = 4) & (RightHat = 1)) : 1;
+        ((proc2.line = 7) & (LeftHat = 1)) : 0;
+        (TRUE) : AllNodes_2_0;
+        esac;
+    next(AllNodes_2_1) := case
+        (BOTH_MODIFYING) : AllNodes_2_1;
+        ((proc1.line = 4) & (RightHat = 1)) : 0;
+        ((proc2.line = 4) & (RightHat = 1)) : 0;
+        (TRUE) : AllNodes_2_1;
+        esac;
+    next(First_ProcID) := First_ProcID;
+    next(LeftHat) := case
+        (BOTH_MODIFYING) : LeftHat;
+        ((proc1.line = 1) & (LeftHat = 1)) : 0;
+        ((proc1.line = 7) & (RightHat = 1)) : 2;
+        ((proc2.line = 1) & (LeftHat = 1)) : 0;
+        ((proc2.line = 7) & (RightHat = 1)) : 2;
+        (TRUE) : LeftHat;
+        esac;
+    next(RightHat) := case
+        (BOTH_MODIFYING) : RightHat;
+        ((proc1.line = 1) & (RightHat = 2)) : 1;
+        ((proc1.line = 1) & (RightHat = 1)) : 0;
+        (proc1.line = 4) : 2;
+        ((proc1.line = 7) & (RightHat = 1)) : 0;
+        ((proc1.line = 7) & (RightHat = 2)) : 1;
+        ((proc2.line = 1) & (RightHat = 2)) : 1;
+        ((proc2.line = 1) & (RightHat = 1)) : 0;
+        (proc2.line = 4) : 2;
+        ((proc2.line = 7) & (RightHat = 1)) : 0;
+        ((proc2.line = 7) & (RightHat = 2)) : 1;
+        (TRUE) : RightHat;
+        esac;
+    next(Second_ProcID) := Second_ProcID;
+    next(newnode) := newnode;
+    next(popRightFAIL) := case
+        ((proc1.line = 3) & temp_popRightFAIL) : TRUE;
+        ((proc2.line = 3) & temp_popRightFAIL) : TRUE;
+        (TRUE) : popRightFAIL;
+        esac;
+    next(proc1.line) := case
+        ((proc1.line = 0) & (First_ProcID = 1)) : {1 , 4 , 7};
+        ((proc1.line = 0) & (First_ProcID = 2)) : {1 , 4 , 7};
+        (proc1.line = 1) : 2;
+        ((RightHat = 1) & (proc1.line = 2) & (LeftHat = 1)) : {2 , 3};
+        ((RightHat = 2) & (proc1.line = 2) & (LeftHat = 1)) : {2 , 3};
+        (proc1.line = 3) : 0;
+        (proc1.line = 4) : 5;
+        (proc1.line = 5) : {5 , 0};
+        (proc1.line = 7) : 8;
+        ((RightHat = 1) & (proc1.line = 8) & (LeftHat = 1)) : {8 , 0};
+        ((RightHat = 2) & (proc1.line = 8) & (LeftHat = 2)) : {8 , 0};
+        ((RightHat = 2) & (proc1.line = 8) & (LeftHat = 1)) : {8 , 0};
+        (TRUE) : proc1.line;
+        esac;
+    next(proc2.line) := case
+        ((proc2.line = 0) & (Second_ProcID = 1)) : {1 , 4 , 7};
+        ((proc2.line = 0) & (Second_ProcID = 2)) : {1 , 4 , 7};
+        (proc2.line = 1) : 2;
+        ((RightHat = 1) & (proc2.line = 2) & (LeftHat = 1)) : {2 , 3};
+        ((RightHat = 2) & (proc2.line = 2) & (LeftHat = 1)) : {2 , 3};
+        (proc2.line = 3) : 0;
+        (proc2.line = 4) : 5;
+        (proc2.line = 5) : {5 , 0};
+        (proc2.line = 7) : 8;
+        ((RightHat = 1) & (proc2.line = 8) & (LeftHat = 1)) : {8 , 0};
+        ((RightHat = 2) & (proc2.line = 8) & (LeftHat = 2)) : {8 , 0};
+        ((RightHat = 2) & (proc2.line = 8) & (LeftHat = 1)) : {8 , 0};
+        (TRUE) : proc2.line;
+        esac;
+    next(temp_popRightFAIL) := case
+        ((proc1.line = 1) & (RightHat = 0)) : TRUE;
+        ((proc2.line = 1) & (RightHat = 0)) : TRUE;
+        (TRUE) : temp_popRightFAIL;
+        esac;
