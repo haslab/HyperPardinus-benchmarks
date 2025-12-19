@@ -33,6 +33,7 @@ ENV PATH=/HyperPardinus:${PATH}
 RUN apt install -y qemu-user qemu-user-static binfmt-support
 RUN wget -O nuXmv.tar.xz https://nuxmv.fbk.eu/theme/download.php?file=nuXmv-2.1.0-linux64.tar.xz && tar -xvf nuXmv.tar.xz nuXmv-2.1.0-linux64/ && rm -rf nuXmv.tar.xz
 COPY nuXmv/nuXmv /root/usr/bin/nuXmv
+COPY hyperalloy /root/usr/bin/hyperalloy
 
 # set up benchmarks 
 
