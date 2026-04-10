@@ -69,7 +69,11 @@
     , "cmd" : 0, "k" : 20, "sem" : "pes" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=spot", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
     "robot_two":
     { "prop" : "robot/robot_robust.als"
-    , "cmd" : 1, "k" : 20, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=spot", "qbfOpts": " --splitformula=invar", "alloyOpts" : { "AutoHyper" : "--compositionoff" } }
+    , "cmd" : 1, "k" : 20, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=spot", "qbfOpts": " --splitformula=invar", "alloyOpts" : { "AutoHyper" : "--compositionoff" } },
+    
+    "snark_incorrect":
+    { "prop" : "snark/SNARKFormula.als"
+    , "cmd" : 0, "k" : 20, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=spot", "qbfOpts": " --splitformula=invar" }
     
     }
 }
