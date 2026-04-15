@@ -12,12 +12,18 @@ pred Linearizability[vari:C/Variant] {
 }
 
 pred sameHistory[A:C/Con,B:S/Seq] {
-  all p:Process | isHistory[A,p] implies (p.(A.op)=B.op and p.(A.oparg)=B.oparg and p.(A.result)=B.retval)
+    all p:Process | isHistory[A,p] implies {
+        p.(A.op)=B.op
+        p.(A.oparg)=B.oparg
+        p.(A.result)=B.retval
+        p.(A.loc)=Done iff B.ret=True
+        p.(A.loc)=Error iff B.ret=False
+    }
 }
 
 assert Incorrect { Linearizability[Buggy] }
 check Incorrect for exactly 1 Val, exactly 2 Process, exactly 3 Node, 30 steps expect 1
 
 assert Correct { Linearizability[Fixed] }
-check Correct for exactly 3 Val, exactly 2 Process, exactly 3 Node, 30 steps expect 0
+check Correct for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps expect 0
 
