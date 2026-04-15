@@ -60,10 +60,18 @@ pred RunCon[W:Con,variant:Variant] {
     W.RightHat = Dummy 
 
     // initialize processes
-    all p:Process | p.(W.loc)=L1 and noState[W,p]
+    all p:Process {
+        p.(W.loc)=L1
+        noState[W,p]
+    }
     
     // transitions
     always {
+        all p:Process {
+            (some p.(W.oparg) - Claimed) iff (some p.(W.op) & Push)
+            (no p.(W.oparg)) iff (some p.(W.op) & Pop)
+        }
+    
         stutter[W] or reset[W,W.acting] or pushRight[W,W.acting] or popRight[W,W.acting,variant] or pushLeftAtomic[W,W.acting] or popLeft[W,W.acting,variant]
         
         all p2:Process-W.acting | stutterProcess[W,p2]
@@ -230,8 +238,7 @@ pred pushRightAtomic[W:Con,p:Process] {
 
     p.(W.op)=PushRight
     p.(W.loc) not in Done + Error 
-    some p.(W.oparg)
-    not p.(W.oparg) = Claimed
+    some p.(W.oparg) - Claimed
     no p.(W.result)
     
     p.(W.loc)=L1 implies {
@@ -290,8 +297,7 @@ pred pushRight[W:Con,p:Process] {
 
     p.(W.op)=PushRight
     p.(W.loc) not in Done + Error 
-    some p.(W.oparg)
-    not p.(W.oparg) = Claimed
+    some p.(W.oparg) - Claimed
     no p.(W.result)
     
     p.(W.loc)=L1 implies {
@@ -349,8 +355,7 @@ pred pushLeftAtomic[W:Con,p:Process] {
 
     p.(W.op)=PushLeft
     p.(W.loc) not in Done + Error 
-    some p.(W.oparg)
-    not p.(W.oparg) = Claimed
+    some p.(W.oparg) - Claimed
     no p.(W.result)
     
     p.(W.loc)=L1 implies {
@@ -409,8 +414,7 @@ pred pushLeft[W:Con,p:Process] {
 
     p.(W.op)=PushLeft
     p.(W.loc) not in Done + Error 
-    some p.(W.oparg)
-    not p.(W.oparg) = Claimed
+    some p.(W.oparg) - Claimed
     no p.(W.result)
     
     p.(W.loc)=L1 implies {

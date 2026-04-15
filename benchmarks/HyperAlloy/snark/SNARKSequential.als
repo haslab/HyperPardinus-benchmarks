@@ -27,6 +27,8 @@ pred RunSeq[W:Seq] {
     no W.ret and no W.retval
     // transitions
     always {
+        (some W.oparg - Claimed) iff (some W.op & Push)
+        (no W.oparg) iff (some W.op & Pop)
         stutter[W] or reset[W] or pushRight[W] or pushLeft[W] or popRight[W] or popLeft[W]
     }
 }
