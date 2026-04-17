@@ -72,16 +72,14 @@ pred RunCon[W:Con,variant:Variant] {
             (no p.(W.oparg)) iff (some p.(W.op) & Pop)
         }
     
-        stutter[W] or reset[W,W.acting] or pushRight[W,W.acting] or popRight[W,W.acting,variant] or pushLeftAtomic[W,W.acting] or popLeft[W,W.acting,variant]
+        stutter[W] or reset[W,W.acting] or pushRightAtomic[W,W.acting] or popRight[W,W.acting,variant] or pushLeftAtomic[W,W.acting] or popLeftAtomic[W,W.acting,variant]
         
         all p2:Process-W.acting | stutterProcess[W,p2]
     }
 }
 
-// history registers only atomic events (ret)
-pred isHistory[W:Con,p:Process] { 
-    p.(W.loc) in Done + Error
-    all p2 : Process | after p2.(W.loc) not in Done + Error // the concurrent semantics has two processes, which can both finish 2 ops in sequence. the sequential semantics requires an additional step for that (to reset call status), hence we forbid these cases
+pred isClaimed[v : lone Val] {
+    v = Claimed or no v
 }
 
 pred noState[W:Con,p:Process] { 
@@ -234,45 +232,6 @@ pred assignNode_R[W:Con,p:Process,n:Node,v:lone Node] {
     W.V' = W.V
 }
 
-pred pushRightAtomic[W:Con,p:Process] {
-
-    p.(W.op)=PushRight
-    p.(W.loc) not in Done + Error 
-    some p.(W.oparg) - Claimed
-    no p.(W.result)
-    
-    p.(W.loc)=L1 implies {
-        isFull[W] implies {
-              stutterGlobal[W]
-              failProcess[W,p]
-        } else {
-            newNode_V_nd[W,p,p.(W.oparg)]
-            p.(W.nd).(W.R)' = Dummy
-            p.(W.rh)' = W.RightHat
-            p.(W.aux)' = (W.RightHat).(W.R)
-            (W.RightHat).(W.R) = W.RightHat implies {
-                p.(W.nd).(W.L)' = Dummy
-                p.(W.lh)' = W.LeftHat
-                W.RightHat' = p.(W.nd)'
-                W.LeftHat' = p.(W.nd)'
-                p.(W.result)' = p.(W.result)
-                stutterNodes[W,Node-p.(W.nd)'] 
-                p.(W.loc)' = Done
-            } else {
-                p.(W.nd).(W.L)' = p.(W.rh)'
-                no p.(W.lh)'
-                W.RightHat' = p.(W.nd)'
-                W.LeftHat' = W.LeftHat
-                p.(W.result)' = p.(W.result)
-                stutterNodes[W,Node-p.(W.nd)'-W.RightHat] 
-                W.RightHat.(W.V)' = W.RightHat.(W.V)
-                W.RightHat.(W.L)' = W.RightHat.(W.L)
-                W.RightHat.(W.R)' = p.(W.nd)'
-                p.(W.loc)' = Done
-            }
-        }
-    }
-}
 /*
 pushRight(val v) { // var aux stands for rhR
     nd = new Node(); // L1
@@ -293,6 +252,45 @@ pushRight(val v) { // var aux stands for rhR
     }
 }
 */
+pred pushRightAtomic[W:Con,p:Process] {
+
+    p.(W.op)=PushRight
+    p.(W.loc) not in Done + Error 
+    some p.(W.oparg) - Claimed
+    no p.(W.result)
+    
+    p.(W.loc)=L1 implies {
+        isFull[W] implies {
+              stutterGlobal[W]
+              failProcess[W,p]
+        } else {
+            newNode_V_nd[W,p,p.(W.oparg)]
+            p.(W.nd)'.(W.R)' = Dummy
+            p.(W.rh)' = W.RightHat
+            p.(W.aux)' = (W.RightHat).(W.R)
+            (W.RightHat).(W.R) = W.RightHat implies {
+                p.(W.nd)'.(W.L)' = Dummy
+                p.(W.lh)' = W.LeftHat
+                W.RightHat' = p.(W.nd)'
+                W.LeftHat' = p.(W.nd)'
+                p.(W.result)' = p.(W.result)
+                stutterNodes[W,Node-p.(W.nd)'] 
+                p.(W.loc)' = Done
+            } else {
+                p.(W.nd)'.(W.L)' = p.(W.rh)'
+                no p.(W.lh)'
+                W.RightHat' = p.(W.nd)'
+                W.LeftHat' = W.LeftHat
+                p.(W.result)' = p.(W.result)
+                stutterNodes[W,Node-p.(W.nd)'-W.RightHat] 
+                W.RightHat.(W.V)' = W.RightHat.(W.V)
+                W.RightHat.(W.L)' = W.RightHat.(W.L)
+                W.RightHat.(W.R)' = p.(W.nd)'
+                p.(W.loc)' = Done
+            }
+        }
+    }
+}
 pred pushRight[W:Con,p:Process] {
 
     p.(W.op)=PushRight
@@ -351,45 +349,6 @@ pred pushRight[W:Con,p:Process] {
     }
 }
 
-pred pushLeftAtomic[W:Con,p:Process] {
-
-    p.(W.op)=PushLeft
-    p.(W.loc) not in Done + Error 
-    some p.(W.oparg) - Claimed
-    no p.(W.result)
-    
-    p.(W.loc)=L1 implies {
-        isFull[W] implies {
-              stutterGlobal[W]
-              failProcess[W,p]
-        } else {
-            newNode_V_nd[W,p,p.(W.oparg)]
-            p.(W.nd).(W.L)' = Dummy
-            p.(W.lh)' = W.LeftHat
-            p.(W.aux)' = (W.LeftHat).(W.L)
-            (W.LeftHat).(W.L) = W.LeftHat implies {
-                p.(W.nd).(W.R)' = Dummy
-                p.(W.rh)' = W.RightHat
-                W.LeftHat' = p.(W.nd)'
-                W.RightHat' = p.(W.nd)'
-                p.(W.result)' = p.(W.result)
-                stutterNodes[W,Node-p.(W.nd)'] 
-                p.(W.loc)' = Done
-            } else {
-                p.(W.nd).(W.R)' = p.(W.lh)'
-                no p.(W.rh)'
-                W.LeftHat' = p.(W.nd)'
-                W.RightHat' = W.RightHat
-                p.(W.result)' = p.(W.result)
-                stutterNodes[W,Node-p.(W.nd)'-W.LeftHat] 
-                W.RightHat.(W.V)' = W.RightHat.(W.V)
-                W.RightHat.(W.R)' = W.RightHat.(W.R)
-                W.RightHat.(W.L)' = p.(W.nd)'
-                p.(W.loc)' = Done
-            }
-        }
-    }
-}
 /*
 pushLeft(val v) { // var aux stands for lhL
     nd = new Node(); // L1
@@ -410,6 +369,45 @@ pushLeft(val v) { // var aux stands for lhL
     }
 }
 */
+pred pushLeftAtomic[W:Con,p:Process] {
+
+    p.(W.op)=PushLeft
+    p.(W.loc) not in Done + Error 
+    some p.(W.oparg) - Claimed
+    no p.(W.result)
+    
+    p.(W.loc)=L1 implies {
+        isFull[W] implies {
+              stutterGlobal[W]
+              failProcess[W,p]
+        } else {
+            newNode_V_nd[W,p,p.(W.oparg)]
+            p.(W.nd)'.(W.L)' = Dummy
+            p.(W.lh)' = W.LeftHat
+            p.(W.aux)' = (W.LeftHat).(W.L)
+            (W.LeftHat).(W.L) = W.LeftHat implies {
+                p.(W.nd)'.(W.R)' = Dummy
+                p.(W.rh)' = W.RightHat
+                W.LeftHat' = p.(W.nd)'
+                W.RightHat' = p.(W.nd)'
+                p.(W.result)' = p.(W.result)
+                stutterNodes[W,Node-p.(W.nd)'] 
+                p.(W.loc)' = Done
+            } else {
+                p.(W.nd)'.(W.R)' = p.(W.lh)'
+                no p.(W.rh)'
+                W.LeftHat' = p.(W.nd)'
+                W.RightHat' = W.RightHat
+                p.(W.result)' = p.(W.result)
+                stutterNodes[W,Node-p.(W.nd)'-W.LeftHat] 
+                W.RightHat.(W.V)' = W.RightHat.(W.V)
+                W.RightHat.(W.R)' = W.RightHat.(W.R)
+                W.RightHat.(W.L)' = p.(W.nd)'
+                p.(W.loc)' = Done
+            }
+        }
+    }
+}
 pred pushLeft[W:Con,p:Process] {
 
     p.(W.op)=PushLeft
@@ -475,7 +473,13 @@ pred popRight[W:Con,p:Process,v:Variant] {
   no p.(W.result)
   (v=Buggy implies popRightBuggy[W,p] else popRightFixed[W,p])
 }
-
+pred popRightAtomic[W:Con,p:Process,v:Variant] {
+  p.(W.op)=PopRight 
+  no p.(W.oparg)
+  p.(W.loc) not in Done + Error 
+  no p.(W.result)
+  (v=Buggy implies popRightBuggyAtomic[W,p] else popRightFixedAtomic[W,p])
+}
 /*
 val popRight() { // var aux stands for rhL
     while (true) { // L1
@@ -497,6 +501,8 @@ val popRight() { // var aux stands for rhL
     }
 }
 */
+pred popRightBuggyAtomic[W:Con,p:Process] {
+}
 pred popRightBuggy[W:Con,p:Process] {
     
     p.(W.loc)=L1 implies {
@@ -572,6 +578,37 @@ val popRight() {
     }
 }
 */
+pred popRightFixedAtomic[W:Con,p:Process] { // var aux stands for rhL
+    p.(W.loc)=L1 implies {
+        stutterEnv[W,p]
+        p.(W.rh)' = W.RightHat
+        p.(W.aux)' = (W.RightHat).(W.L)
+        (W.RightHat).(W.R) = (W.RightHat) implies {
+            stutterGlobal[W]
+            p.(W.lh)' = p.(W.lh)
+            p.(W.nd)' = p.(W.nd)
+            p.(W.result)' = p.(W.result) 
+            p.(W.loc)' = Error
+        } else {
+            (W.RightHat)' = p.(W.aux)'
+            (W.LeftHat)' = W.LeftHat
+            isClaimed[(W.RightHat).(W.V)] implies {
+                stutterGlobal[W]
+                p.(W.lh)' = p.(W.lh)
+                p.(W.nd)' = p.(W.nd)
+                no p.(W.result)'
+                p.(W.loc)' = Error
+            } else {
+                stutterHats[W]
+                freeNode[W,W.RightHat] // we are not marking as claimed; other ops must consider empty nodes as claimed
+                p.(W.lh)' = p.(W.lh)
+                p.(W.nd)' = p.(W.nd)
+                p.(W.result)' = (W.RightHat).(W.V)
+                p.(W.loc)' = Done
+            }
+        }
+    }
+}
 pred popRightFixed[W:Con,p:Process] { // var aux stands for rhL
     p.(W.loc)=L1 implies {
         stutterEnv[W,p]
@@ -609,7 +646,7 @@ pred popRightFixed[W:Con,p:Process] { // var aux stands for rhL
         stutterGlobal[W]
         stutterEnv[W,p] 
         p.(W.result') = p.(W.rh).(W.V)
-        p.(W.result') = Claimed implies {
+        isClaimed[p.(W.result')] implies {
             p.(W.nd)' = p.(W.nd)
             p.(W.lh)' = p.(W.lh)
             p.(W.rh)' = p.(W.rh)
@@ -648,7 +685,13 @@ pred popLeft[W:Con,p:Process,v:Variant] {
   no p.(W.result)
   (v=Buggy implies popLeftBuggy[W,p] else popLeftFixed[W,p])
 }
-
+pred popLeftAtomic[W:Con,p:Process,v:Variant] {
+  p.(W.op)=PopLeft 
+  no p.(W.oparg)
+  p.(W.loc) not in Done + Error 
+  no p.(W.result)
+  (v=Buggy implies popLeftBuggyAtomic[W,p] else popLeftFixedAtomic[W,p])
+}
 /*
 val popLeft() { // var aux stands for lhR
     while (true) { // L1
@@ -670,6 +713,41 @@ val popLeft() { // var aux stands for lhR
     }
 }
 */
+pred popLeftBuggyAtomic[W:Con,p:Process] {
+
+    p.(W.loc)=L1 implies {
+        p.(W.lh)' = W.LeftHat
+        p.(W.rh)' = W.RightHat
+        (W.LeftHat).(W.L) = W.LeftHat implies {
+            stutterGlobal[W]
+            stutterEnv[W,p]
+            p.(W.nd)' = p.(W.nd)
+            p.(W.aux)' = p.(W.aux)
+            p.(W.result)' = p.(W.result)
+            p.(W.loc)' = Error
+        } else {
+            W.LeftHat = W.RightHat implies {    
+                W.LeftHat' = Dummy
+                W.RightHat' = Dummy
+                stutterEnv[W,p]
+                freeNode[W,W.LeftHat]
+                p.(W.nd)' = p.(W.nd)
+                p.(W.aux)' = p.(W.aux)
+                p.(W.result)' = (W.LeftHat).(W.V)
+                p.(W.loc') = Done
+            } else {
+                p.(W.aux)' = (W.LeftHat).(W.R)
+                W.LeftHat' = p.(W.aux)'
+                W.RightHat' = W.RightHat
+                stutterEnv[W,p]
+                freeNode[W,W.LeftHat]
+                p.(W.nd)' = p.(W.nd)
+                p.(W.result)' = (W.LeftHat).(W.V)
+                p.(W.loc') = Done
+            }
+        }
+    }
+}
 pred popLeftBuggy[W:Con,p:Process] {
     
     p.(W.loc)=L1 implies {
@@ -732,9 +810,9 @@ val popLeft() {
         if (lh->L == lh) { // L2
             if (LeftHat == lh) return "empty";
         } else { // L2
-            if (DCAS (&LefttHat, &lh->R, lh, lhR, lhR, lh)) { // L3
+            if (DCAS (&LeftHat, &lh->R, lh, lhR, lhR, lh)) { // L3
                 result = lh->V; // L4
-                if (result != "claimed"){
+                if (result != "claimed") {
                     if (CAS(&lh->V, result, "claimed")) { // L5
                         lh->L = Dummy; // L6
                         return result;
@@ -745,6 +823,37 @@ val popLeft() {
     }
 }
 */
+pred popLeftFixedAtomic[W:Con,p:Process] { // var aux stands for lhR
+    p.(W.loc)=L1 implies {
+        stutterEnv[W,p]
+        p.(W.lh)' = W.LeftHat
+        p.(W.aux)' = (W.LeftHat).(W.R)
+        (W.LeftHat).(W.L) = (W.LeftHat) implies {
+            stutterGlobal[W]
+            p.(W.rh)' = p.(W.rh)
+            p.(W.nd)' = p.(W.nd)
+            p.(W.result)' = p.(W.result) 
+            p.(W.loc)' = Error
+        } else {
+            (W.LeftHat)' = p.(W.aux)'
+            (W.RightHat)' = W.RightHat
+            isClaimed[(W.LeftHat).(W.V)] implies {
+                stutterGlobal[W]
+                p.(W.rh)' = p.(W.rh)
+                p.(W.nd)' = p.(W.nd)
+                no p.(W.result)'
+                p.(W.loc)' = Error
+            } else {
+                stutterHats[W]
+                freeNode[W,W.LeftHat] // we are not marking as claimed; other ops must consider empty nodes as claimed
+                p.(W.rh)' = p.(W.rh)
+                p.(W.nd)' = p.(W.nd)
+                p.(W.result)' = (W.LeftHat).(W.V)
+                p.(W.loc)' = Done
+            }
+        }
+    }
+}
 pred popLeftFixed[W:Con,p:Process] { // var aux stands for lhR
     p.(W.loc)=L1 implies {
         stutterEnv[W,p]
@@ -782,7 +891,7 @@ pred popLeftFixed[W:Con,p:Process] { // var aux stands for lhR
         stutterGlobal[W]
         stutterEnv[W,p] 
         p.(W.result') = p.(W.lh).(W.V)
-        p.(W.result') = Claimed implies {
+        isClaimed[p.(W.result')] implies {
             p.(W.nd)' = p.(W.nd)
             p.(W.lh)' = p.(W.lh)
             p.(W.rh)' = p.(W.rh)
@@ -904,6 +1013,23 @@ pred CAS_lh_V[W:Con,p:Process,new:Val,l:LoC] {
   stutterEnv[W,p] 
   stutterState[W,p]
 } 
+
+run Bug1 {
+  # Node = 2
+  RunCon[Con,Buggy]
+  some disj p1,p2:Process {
+    Con.loc[p1] = L1         and Con.loc[p2] = L1         and Con.op[p1] = PopRight;
+    Con.loc[p1] = L2         and Con.loc[p2] = L1;
+    Con.loc[p1] = L2         and Con.loc[p2] = L1         and Con.op[p2] = PushRight;
+    Con.loc[p1] = L2         and Con.loc[p2] = Done;
+    Con.loc[p1] = L2         and Con.loc[p2] = L1         and Con.op[p2] = PopRight;
+    Con.loc[p1] = L2         and Con.loc[p2] = L2;
+    Con.loc[p1] = L2         and Con.loc[p2] = L3;
+    Con.loc[p1] = L2         and Con.loc[p2] = L4;
+    Con.loc[p1] = L2         and Con.loc[p2] = Done;
+    Con.loc[p1] =        Error and Con.loc[p2] = Done
+  }
+} for 1..10 steps, 2 Val, 2 Node, 2 Process expect 1
 
 run EmptyNeverEmptyBuggy {
   RunCon[Con,Buggy]

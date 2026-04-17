@@ -6,7 +6,7 @@ open SNARKConcurrent as C
 open SNARKSequential as S
 
 pred Linearizability[vari:C/Variant] {
-  all A:C/Con | RunCon[A,vari] implies 
+  all A:C/Con | RunCon[A,vari] implies always noConsecutiveHistories[A] implies
     some B:S/Seq | RunSeq[B] and
       always sameHistory[A,B]
 }
@@ -21,8 +21,19 @@ pred sameHistory[A:C/Con,B:S/Seq] {
     }
 }
 
+pred isHistory[W:Con,p:Process] { 
+    p.(W.loc) in Done + Error
+}
+
+// The concurrent semantics is in fact not linearizable since multiple processes can terminate in consecutive states, while in the sequential semantics additional reset steps are needed. We ignore such cases by assigning higher priority to reset.
+pred noConsecutiveHistories[W:Con] {
+    all p : Process | p.(W.loc) in Done + Error implies after p.(W.loc) = L1
+}
+
+// not (p.(W.loc)=Error and some p.(W.op) & Push)
+
 assert Incorrect { Linearizability[Buggy] }
-check Incorrect for exactly 1 Val, exactly 2 Process, exactly 3 Node, 30 steps expect 1
+check Incorrect for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps expect 1
 
 assert Correct { Linearizability[Fixed] }
 check Correct for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps expect 0
