@@ -77,6 +77,14 @@
     
     "snark_correct":
     { "prop" : "snark/SNARKFormula.als"
+    , "cmd" : 1, "k" : 20, "sem" : "opt" , "expected" : true, "expectsWitness": false, "ahOpts" : "--ahsolver=spot", "qbfOpts": " --splitformula=invar" },
+    
+    "snarkop_incorrect":
+    { "prop" : "snarkop/SNARKFormula.als"
+    , "cmd" : 0, "k" : 20, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=spot", "qbfOpts": " --splitformula=invar" },
+    
+    "snarkop_correct":
+    { "prop" : "snarkop/SNARKFormula.als"
     , "cmd" : 1, "k" : 20, "sem" : "opt" , "expected" : true, "expectsWitness": false, "ahOpts" : "--ahsolver=spot", "qbfOpts": " --splitformula=invar" }
     
     }
