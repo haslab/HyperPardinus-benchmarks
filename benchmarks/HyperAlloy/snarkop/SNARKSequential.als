@@ -172,8 +172,8 @@ pred popRight2[W:Seq] {
 pred popRight3[W:Seq] {
     W.RightHat'=W.RightHat.(W.L)
     W.LeftHat'=W.LeftHat
-	W.V' = W.V
-	W.R' = W.R
+	W.V' = W.V - W.RightHat -> Val
+	W.R' = W.R ++ W.RightHat -> Dummy
 	W.L' = W.L ++ W.RightHat -> W.RightHat
 --    no W.RightHat.(W.V)'
 --    no W.RightHat.(W.L)'
@@ -210,9 +210,9 @@ pred popLeft2[W:Seq] {
 pred popLeft3[W:Seq] {
     W.RightHat'=W.RightHat
     W.LeftHat'=W.LeftHat.(W.R)
-	W.V' = W.V
+	W.V' = W.V - W.LeftHat -> Val
 	W.R' = W.R ++ W.LeftHat -> W.LeftHat
-	W.L' = W.L
+	W.L' = W.L ++ W.LeftHat -> Dummy
 --    no W.LeftHat.(W.V)'
 --    no W.LeftHat.(W.L)'
 --    no W.LeftHat.(W.R)'

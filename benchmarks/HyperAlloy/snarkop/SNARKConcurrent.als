@@ -490,7 +490,7 @@ val popRight() { // var aux stands for rhL
         } else {
             rhL = rh->L;
             if (DCAS(&RightHat, &rh->L, rh, rhL, rhL, rh)) { // L5
-                result = rh->V; // L4
+                result = rh->V; // L6
                 rh->R = Dummy; // we are freeing nodes explicitely
                 rh->V = null; // this makes no difference in our setting
                 return result; // hence the jump to L4
@@ -522,9 +522,9 @@ pred popRightBuggyAtomic[W:Con,p:Process] {
             W.RightHat' = (W.RightHat).(W.L)
             W.LeftHat' = W.LeftHat
             stutterEnv[W,p]
-			W.V' = W.V
+			W.V' = W.V - W.RightHat -> Val
 			W.L' = W.L ++ W.RightHat -> W.RightHat
-			W.R' = W.R
+			W.R' = W.R ++ W.RightHat -> Dummy
 --            freeNode[W,W.RightHat]
             noNextState_result[W,p,(W.RightHat).(W.V)]
             p.(W.loc)' = Done
@@ -573,10 +573,11 @@ pred popRightBuggy[W:Con,p:Process] {
     p.(W.loc)=L4 implies { 
         stutterHats[W]
         stutterEnv[W,p] 
-		W.V' = W.V
-		W.L' = W.L ++ p.(W.rh) -> p.(W.rh)
-		W.R' = W.R
---        freeNode[W,p.(W.rh)]
+        stutterNodes[W,Node]
+--		W.V' = W.V
+--		W.L' = W.L ++ p.(W.rh) -> p.(W.rh)
+--		W.R' = W.R
+-- --        freeNode[W,p.(W.rh)]
         noNextState_result[W,p,p.(W.rh).(W.V)]
         p.(W.loc)' = Done
     }
@@ -585,10 +586,20 @@ pred popRightBuggy[W:Con,p:Process] {
         (W.RightHat=p.(W.rh) and p.(W.rh).(W.L)=p.(W.aux)) implies {
             DCAS_RightHat_rh_L[W,p,p.(W.aux),p.(W.rh)]
             stutterState[W,p]
-            p.(W.loc)' = L4
+            p.(W.loc)' = L6
         } else {
             step[W,p,L1]
         }
+    }
+    p.(W.loc)=L6 implies {
+        stutterHats[W]
+        stutterEnv[W,p] 
+		W.V' = W.V - p.(W.rh) -> Val
+		W.L' = W.L ++ p.(W.rh) -> p.(W.rh)
+		W.R' = W.R ++ p.(W.rh) -> Dummy
+--        freeNode[W,p.(W.rh)]
+        noNextState_result[W,p,p.(W.rh).(W.V)]
+        p.(W.loc)' = Done
     }
 }
 
@@ -747,7 +758,7 @@ val popLeft() { // var aux stands for lhR
         } else {
             lhR = lh->R;
             if (DCAS(&LeftHat, &lh->R, lh, lhR, lhR, lh)) { // L5
-                result = lh->V; // L4
+                result = lh->V; // L6
                 lh->L = Dummy;
                 lh->V = null; 
                 return result;
@@ -780,8 +791,8 @@ pred popLeftBuggyAtomic[W:Con,p:Process] {
             W.RightHat' = W.RightHat
             stutterEnv[W,p]
 --            freeNode[W,W.LeftHat]
-			W.V' = W.V
-			W.L' = W.L
+			W.V' = W.V - W.LeftHat -> Val
+			W.L' = W.L ++ W.LeftHat -> Dummy
 			W.R' = W.R ++ W.LeftHat -> W.LeftHat
             noNextState_result[W,p,(W.LeftHat).(W.V)]
             p.(W.loc)' = Done
@@ -829,10 +840,11 @@ pred popLeftBuggy[W:Con,p:Process] {
     p.(W.loc)=L4 implies { 
         stutterHats[W]
         stutterEnv[W,p]
-		W.V' = W.V
-		W.L' = W.L
-		W.R' = W.R ++ p.(W.lh) -> p.(W.lh)
---        freeNode[W,p.(W.lh)]
+        stutterNodes[W,Node]
+-- 		W.V' = W.V
+-- 		W.L' = W.L
+-- 		W.R' = W.R ++ p.(W.lh) -> p.(W.lh)
+-- --        freeNode[W,p.(W.lh)]
         assignState_result[W,p,p.(W.lh).(W.V)]
         p.(W.loc)' = Done
     }
@@ -841,10 +853,20 @@ pred popLeftBuggy[W:Con,p:Process] {
         (W.LeftHat=p.(W.lh) and p.(W.lh).(W.R)=p.(W.aux)) implies {
             DCAS_LeftHat_lh_R[W,p,p.(W.aux),p.(W.lh)]
             stutterState[W,p]
-            p.(W.loc)' = L4
+            p.(W.loc)' = L6
         } else {
             step[W,p,L1]
         }
+    }
+    
+    p.(W.loc)=L6 implies {
+        stutterHats[W]
+        stutterEnv[W,p] 
+		W.V' = W.V - p.(W.lh) -> Val
+		W.R' = W.R ++ p.(W.lh) -> p.(W.lh)
+		W.L' = W.L ++ p.(W.lh) -> Dummy
+        noNextState_result[W,p,p.(W.lh).(W.V)]
+        p.(W.loc)' = Done
     }
 }
 

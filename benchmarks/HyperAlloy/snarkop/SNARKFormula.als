@@ -17,7 +17,7 @@ pred sameOps[A:C/Con,B:S/Seq] {
 }
 
 pred sameHistory[A:C/Con,B:S/Seq] {
-    Process.(A.loc) in L1 implies Process.(A.log) = B.log
+    Process.(A.loc) in Done+Error implies Process.(A.log) = B.log
 }
 
 // The concurrent semantics is in fact not linearizable since multiple processes can terminate in consecutive states, while in the sequential semantics additional reset steps are needed. We ignore such cases by assigning higher priority to reset.
@@ -28,7 +28,7 @@ pred noConsecutiveHistories[W:Con] {
 // not (p.(W.loc)=Error and some p.(W.op) & Push)
 
 assert Incorrect { Linearizability[Buggy] }
-check Incorrect for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps, exactly 3 OpId expect 1
+check Incorrect for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps, exactly 4 OpId expect 1
 
 assert Correct { Linearizability[Fixed] }
 check Correct for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps, exactly  3 OpId expect 0
