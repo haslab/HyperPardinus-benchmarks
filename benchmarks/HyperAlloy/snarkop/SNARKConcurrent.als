@@ -1068,6 +1068,21 @@ run Bug1 {
   }
 } for 1..9 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
 
+run NoBug1 {
+  RunCon[Con,Fixed]
+  some disj p1,p2:Process {
+    Con.loc[p1] = L1         and Con.loc[p2] = L1         and Con.op[p1].(Con._op) = PushLeft;
+    Con.loc[p1] = Done       and Con.loc[p2] = L1;
+    Con.loc[p1] = L1         and Con.loc[p2] = L1         and Con.op[p1].(Con._op) = PopRight;
+    Con.loc[p1] = L2         and Con.loc[p2] = L1;
+    Con.loc[p1] = L2         and Con.loc[p2] = L1         and Con.op[p2].(Con._op) = PushRight;
+    Con.loc[p1] = L2         and Con.loc[p2] = Done;
+	Con.loc[p1] = L2         and Con.loc[p2] = L1         and Con.op[p2].(Con._op) = PopLeft;
+    Con.loc[p1] = L2         and Con.loc[p2] = Done;       
+    Con.loc[p1] = Error      and Con.loc[p2] = Done       
+  }
+} for 1..9 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 0
+
 run EmptyNeverEmptyBuggy {
   RunCon[Con,Buggy]
   some disj p:Process {
