@@ -74,11 +74,12 @@ pred RunCon[W:Con,variant:Variant] {
     // transitions
     always {  
         
-        stutter[W] or reset[W,W.acting] or pushRightAtomic[W,W.acting] or pushLeftAtomic[W,W.acting] or popRightAtomic[W,W.acting,variant] or popLeftAtomic[W,W.acting,variant]
+        stutter[W] or reset[W,W.acting] or pushRightAtomic[W,W.acting] or pushLeftAtomic[W,W.acting] or popRight[W,W.acting,variant] or popLeftAtomic[W,W.acting,variant]
         all p2:Process-W.acting | stutterProcess[W,p2]
 		all p:Process | p.(W.loc)' in Done+Error implies p.(W.log)' = p.(W.log) + p.(W.op) else p.(W.log)' = p.(W.log)
     }
 }
+
 
 pred isClaimed[v : lone Val] {
     v = Claimed or no v
@@ -170,12 +171,13 @@ pred newNode[W:Con,p:Process,lptr:lone Node,rptr:lone Node,v:Val,l:LoC] { // nd 
     }
 }
 
+/*
 pred freeNode[W:Con,n:Node] { // we consider nodes with n->V=null as free
-    W.V' = W.V - n -> Val
-    W.L' = W.L - n -> Node
-    W.R' = W.R - n -> Node
+    W.V' = W.V-- - n -> Val
+    W.L' = W.L-- - n -> Node
+    W.R' = W.R-- - n -> Node
 }
-
+*/
 pred step[W:Con,p:Process,l:LoC] {
     stutterGlobal[W] 
     stepProcess[W,p,l]
@@ -510,14 +512,20 @@ pred popRightBuggyAtomic[W:Con,p:Process] {
             W.RightHat' = Dummy
             W.LeftHat' = Dummy
             stutterEnv[W,p]
-            freeNode[W,W.RightHat]
+--            freeNode[W,W.RightHat]
+			W.V' = W.V
+			W.L' = W.L
+			W.R' = W.R
             noNextState_result[W,p,(W.RightHat).(W.V)]
             p.(W.loc)' = Done
         } else {
             W.RightHat' = (W.RightHat).(W.L)
             W.LeftHat' = W.LeftHat
             stutterEnv[W,p]
-            freeNode[W,W.RightHat]
+			W.V' = W.V
+			W.L' = W.L ++ W.RightHat -> W.RightHat
+			W.R' = W.R
+--            freeNode[W,W.RightHat]
             noNextState_result[W,p,(W.RightHat).(W.V)]
             p.(W.loc)' = Done
         }
@@ -565,7 +573,10 @@ pred popRightBuggy[W:Con,p:Process] {
     p.(W.loc)=L4 implies { 
         stutterHats[W]
         stutterEnv[W,p] 
-        freeNode[W,p.(W.rh)]
+		W.V' = W.V
+		W.L' = W.L ++ p.(W.rh) -> p.(W.rh)
+		W.R' = W.R
+--        freeNode[W,p.(W.rh)]
         noNextState_result[W,p,p.(W.rh).(W.V)]
         p.(W.loc)' = Done
     }
@@ -624,7 +635,10 @@ pred popRightFixedAtomic[W:Con,p:Process] { // var aux stands for rhL
             p.(W.loc)' = Error
         } else {
             stutterHats[W]
-            freeNode[W,W.RightHat] // we are not marking as claimed; other ops must consider empty nodes as claimed
+			W.V' = W.V
+			W.R' = W.R
+			W.L' = W.L ++ W.RightHat -> W.RightHat
+--            freeNode[W,W.RightHat] // we are not marking as claimed; other ops must consider empty nodes as claimed
             p.(W.lh)' = p.(W.lh)
             p.(W.nd)' = p.(W.nd)
             p.(W.result)' = (W.RightHat).(W.V)
@@ -700,7 +714,11 @@ pred popRightFixed[W:Con,p:Process] { // var aux stands for rhL
     p.(W.loc)=L6 implies {
         stutterHats[W]
         //assignNode_R[W,p,p.(W.rh),Dummy]
-        freeNode[W,p.(W.rh)]
+--        freeNode[W,p.(W.rh)]
+		W.V' = W.V
+		W.R' = W.R
+		W.L' = W.L ++ p.(W.rh) -> p.(W.rh)
+
         stepProcess[W,p,Done]
     }
 }
@@ -751,14 +769,20 @@ pred popLeftBuggyAtomic[W:Con,p:Process] {
             W.LeftHat' = Dummy
             W.RightHat' = Dummy
             stutterEnv[W,p]
-            freeNode[W,W.LeftHat]
+			W.V' = W.V
+			W.L' = W.L
+			W.R' = W.R
+--            freeNode[W,W.LeftHat]
             noNextState_result[W,p,(W.LeftHat).(W.V)]
             p.(W.loc)' = Done
         } else {
             W.LeftHat' = (W.LeftHat).(W.R)
             W.RightHat' = W.RightHat
             stutterEnv[W,p]
-            freeNode[W,W.LeftHat]
+--            freeNode[W,W.LeftHat]
+			W.V' = W.V
+			W.L' = W.L
+			W.R' = W.R ++ W.LeftHat -> W.LeftHat
             noNextState_result[W,p,(W.LeftHat).(W.V)]
             p.(W.loc)' = Done
         }
@@ -805,7 +829,10 @@ pred popLeftBuggy[W:Con,p:Process] {
     p.(W.loc)=L4 implies { 
         stutterHats[W]
         stutterEnv[W,p]
-        freeNode[W,p.(W.lh)]
+		W.V' = W.V
+		W.L' = W.L
+		W.R' = W.R ++ p.(W.lh) -> p.(W.lh)
+--        freeNode[W,p.(W.lh)]
         assignState_result[W,p,p.(W.lh).(W.V)]
         p.(W.loc)' = Done
     }
@@ -864,7 +891,10 @@ pred popLeftFixedAtomic[W:Con,p:Process] { // var aux stands for lhR
             p.(W.loc)' = Error
         } else {
             stutterHats[W]
-            freeNode[W,W.LeftHat] // we are not marking as claimed; other ops must consider empty nodes as claimed
+			W.V' = W.V
+			W.L' = W.L
+			W.R' = W.R ++ W.LeftHat -> W.LeftHat
+--            freeNode[W,W.LeftHat] // we are not marking as claimed; other ops must consider empty nodes as claimed
             p.(W.rh)' = p.(W.rh)
             p.(W.nd)' = p.(W.nd)
             p.(W.result)' = (W.LeftHat).(W.V)
@@ -940,7 +970,10 @@ pred popLeftFixed[W:Con,p:Process] { // var aux stands for lhR
     p.(W.loc)=L6 implies {
         stutterHats[W]
         //assignNode_L[W,p,p.(W.lh),Dummy]
-        freeNode[W,p.(W.lh)]
+--        freeNode[W,p.(W.lh)]
+		W.V' = W.V
+		W.L' = W.L
+		W.R' = W.R ++ p.(W.lh) -> p.(W.lh)
         stepProcess[W,p,Done]
     }
 }
@@ -1021,21 +1054,19 @@ pred CAS_lh_V[W:Con,p:Process,new:Val] {
 } 
 
 run Bug1 {
-  # Node = 2
   RunCon[Con,Buggy]
   some disj p1,p2:Process {
+    Con.loc[p1] = L1         and Con.loc[p2] = L1         and Con.op[p1].(Con._op) = PushLeft;
+    Con.loc[p1] = Done       and Con.loc[p2] = L1;
     Con.loc[p1] = L1         and Con.loc[p2] = L1         and Con.op[p1].(Con._op) = PopRight;
     Con.loc[p1] = L2         and Con.loc[p2] = L1;
     Con.loc[p1] = L2         and Con.loc[p2] = L1         and Con.op[p2].(Con._op) = PushRight;
     Con.loc[p1] = L2         and Con.loc[p2] = Done;
-    Con.loc[p1] = L2         and Con.loc[p2] = L1         and Con.op[p2].(Con._op) = PopRight;
-    Con.loc[p1] = L2         and Con.loc[p2] = L2;
-    Con.loc[p1] = L2         and Con.loc[p2] = L3;
-    Con.loc[p1] = L2         and Con.loc[p2] = L4;
-    Con.loc[p1] = L2         and Con.loc[p2] = Done;
-    Con.loc[p1] =        Error and Con.loc[p2] = Done
+	Con.loc[p1] = L2         and Con.loc[p2] = L1         and Con.op[p2].(Con._op) = PopLeft;
+    Con.loc[p1] = L2         and Con.loc[p2] = Done;       
+    Con.loc[p1] = Error      and Con.loc[p2] = Done       
   }
-} for 1..10 steps, 2 Val, 2 Node, 2 Process, 3 OpId expect 1
+} for 1..9 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
 
 run EmptyNeverEmptyBuggy {
   RunCon[Con,Buggy]
