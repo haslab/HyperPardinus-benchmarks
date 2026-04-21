@@ -39,10 +39,10 @@ pred notFail[W:Con,vari:C/Variant] {
         
         // atomic after DCAS
         vari=Buggy implies {
-            (p.(W.loc) = L3 and some p.(W.op) & Pop) implies p.(W.loc)' = L4
-            (p.(W.loc) = L5 and some p.(W.op) & Pop) implies p.(W.loc)' = L6
-            (p.(W.loc) = L4 and some p.(W.op) & Pop) implies p.(W.loc)' = Done
-            (p.(W.loc) = L6 and some p.(W.op) & Pop) implies p.(W.loc)' = Done
+            (p.(W.loc) = L3 and some p.(W.op) & Pop) implies after p.(W.loc) = L4
+            (p.(W.loc) = L5 and some p.(W.op) & Pop) implies after p.(W.loc) = L6
+            (p.(W.loc) = L4 and some p.(W.op) & Pop) implies after p.(W.loc) = Done
+            (p.(W.loc) = L6 and some p.(W.op) & Pop) implies after p.(W.loc) = Done
         } else {
             (p.(W.loc) = L4 and some p.(W.op) & Pop) implies after (p.(W.loc) in Error + L5)
             (p.(W.loc) = L5 and some p.(W.op) & Pop) implies after (p.(W.loc) in Error + L6)
