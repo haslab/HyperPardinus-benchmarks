@@ -493,7 +493,7 @@ val popRight() { // var aux stands for rhL
         } else {
             rhL = rh->L;
             if (DCAS(&RightHat, &rh->L, rh, rhL, rhL, rh)) { // L5
-                result = rh->V; // L4
+                result = rh->V; // L6
                 rh->R = Dummy; // we are freeing nodes explicitely
                 rh->V = null; // this makes no difference in our setting
                 return result; // hence the jump to L4
@@ -544,6 +544,7 @@ pred popRightBuggy[W:Con,p:Process] {
     
     p.(W.loc)=L2 implies {
         p.(W.rh).(W.R)=p.(W.rh) implies {
+            //not p.(W.rh) = Dummy
             stutterGlobal[W]
             failProcess[W,p]
         } else {
@@ -571,7 +572,11 @@ pred popRightBuggy[W:Con,p:Process] {
     p.(W.loc)=L4 implies { 
         stutterHats[W]
         stutterEnv[W,p] 
-        freeNode[W,p.(W.rh)]
+        stutterNodes[W,Node-p.(W.rh)]
+		W.V' = W.V - p.(W.rh) -> Val // make sure to free the node
+		W.L' = W.L
+		W.R' = W.R
+        //freeNode[W,p.(W.rh)]
         noNextState_result[W,p,p.(W.rh).(W.V)]
         p.(W.loc)' = Done
     }
@@ -580,10 +585,21 @@ pred popRightBuggy[W:Con,p:Process] {
         (W.RightHat=p.(W.rh) and p.(W.rh).(W.L)=p.(W.aux)) implies {
             DCAS_RightHat_rh_L[W,p,p.(W.aux),p.(W.rh)]
             stutterState[W,p]
-            p.(W.loc)' = L4
+            p.(W.loc)' = L6
         } else {
             step[W,p,L1]
         }
+    }
+    
+    p.(W.loc)=L6 implies {
+        stutterHats[W]
+        stutterEnv[W,p] 
+		W.V' = W.V - p.(W.rh) -> Val
+		W.L' = W.L
+		W.R' = W.R ++ p.(W.rh) -> Dummy
+--        freeNode[W,p.(W.rh)]
+        noNextState_result[W,p,p.(W.rh).(W.V)]
+        p.(W.loc)' = Done
     }
 }
 
@@ -698,7 +714,11 @@ pred popRightFixed[W:Con,p:Process] { // var aux stands for rhL
     
     p.(W.loc)=L6 implies {
         stutterHats[W]
-        freeNode[W,p.(W.rh)]
+        stutterNodes[W,Node-p.(W.rh)]
+        W.V' = W.V - p.(W.rh) -> Val
+        W.L' = W.L
+        W.R' = W.R ++ p.(W.rh) -> Dummy
+        //freeNode[W,p.(W.rh)]
         stutterEnv[W,p]
         noNextState[W,p]
         p.(W.loc)' = Done
@@ -728,6 +748,7 @@ val popLeft() { // var aux stands for lhR
         if (lh == rh) {
             if (DCAS(&LeftHat, &RightHat, lh, rh, Dummy, Dummy)) // L3
                 return lh->V; // L4
+                // if we don't free the popped node, this will differ in the sequential semantics...
         } else {
             lhR = lh->R;
             if (DCAS(&LeftHat, &lh->R, lh, lhR, lhR, lh)) { // L5
@@ -753,19 +774,27 @@ pred popLeftBuggyAtomic[W:Con,p:Process] {
                 W.LeftHat' = Dummy
                 W.RightHat' = Dummy
                 stutterEnv[W,p]
-                freeNode[W,W.LeftHat]
+                stutterNodes[W,Node-W.LeftHat]
+    			W.V' = W.V - W.LeftHat -> Val // make sure to free the node
+    			W.R' = W.R
+    			W.L' = W.L
+                //freeNode[W,W.LeftHat]
                 noNextState_result[W,p,(W.LeftHat).(W.V)]
                 p.(W.loc)' = Done
             } else {
                 W.LeftHat' = (W.LeftHat).(W.R)
                 W.RightHat' = W.RightHat
                 stutterEnv[W,p]
-                freeNode[W,W.LeftHat]
+    			W.V' = W.V - W.LeftHat -> Val
+    			W.R' = W.R ++ W.LeftHat -> W.LeftHat
+    			W.L' = W.L ++ W.LeftHat -> Dummy
+                //freeNode[W,W.LeftHat]
                 noNextState_result[W,p,(W.LeftHat).(W.V)]
                 p.(W.loc)' = Done
             }
         }
     }
+    
 }
 pred popLeftBuggy[W:Con,p:Process] {
     
@@ -862,7 +891,11 @@ pred popLeftFixedAtomic[W:Con,p:Process] { // var aux stands for lhR
                 p.(W.loc)' = Error
             } else {
                 stutterHats[W]
-                freeNode[W,W.LeftHat] // we are not marking as claimed; other ops must consider empty nodes as claimed
+                stutterNodes[W,Node-W.LeftHat]
+                //freeNode[W,W.LeftHat] // we are not marking as claimed; other ops must consider empty nodes as claimed
+    			W.V' = W.V - W.LeftHat -> Val
+    			W.R' = W.R
+    			W.L' = W.L ++ W.LeftHat -> Dummy        
                 noNextState_result[W,p,(W.LeftHat).(W.V)]
                 p.(W.loc)' = Done
             }

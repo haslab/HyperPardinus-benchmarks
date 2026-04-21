@@ -6,7 +6,7 @@ open SNARKConcurrent as C
 open SNARKSequential as S
 
 pred Linearizability[vari:C/Variant] {
-  all A:C/Con | RunCon[A,vari] implies always (notFail[A] and noConsecutiveHistories[A]) implies
+  all A:C/Con | RunCon[A,vari] implies always (notFail[A,vari] and noConsecutiveHistories[A]) implies
     some B:S/Seq | RunSeq[B] and
       always sameHistory[A,B]
 }
@@ -30,14 +30,24 @@ pred noConsecutiveHistories[W:Con] {
     all p : Process | p.(W.loc) in Done + Error implies after p.(W.loc) = L1
 }
 
-pred notFail[W:Con] {
+// clearly not sequentially consistent. ignore bugs that we know are linearizable to find the bug from the paper
+pred notFail[W:Con,vari:C/Variant] {
     all p : Process {
-        (p.(W.loc) = L3 and some p.(W.op) & Pop) implies after (p.(W.loc) = L4)
-        (p.(W.loc) = L5 and some p.(W.op) & Pop) implies after (p.(W.loc) = L4)
-        (p.(W.loc) = L4 and some p.(W.op) & Pop) implies after (p.(W.loc) = Done)
-        //(p.(W.loc) = L4 and some p.(W.op) & Pop) implies after (p.(W.loc) in Error + L5)
-        //(p.(W.loc) = L5 and some p.(W.op) & Pop) implies after (p.(W.loc) in Error + L6)
-        //(p.(W.loc) = L6 and some p.(W.op) & Pop) implies after (p.(W.loc) = Done)
+    
+        // no later error because of early acquired resource
+        (p.(W.loc) = L2 and some p.(W.op) & Pop and p.(W.rh).(W.R)=p.(W.rh)) implies not p.(W.rh) = Dummy
+        
+        // atomic after DCAS
+        vari=Buggy implies {
+            (p.(W.loc) = L3 and some p.(W.op) & Pop) implies p.(W.loc)' = L4
+            (p.(W.loc) = L5 and some p.(W.op) & Pop) implies p.(W.loc)' = L6
+            (p.(W.loc) = L4 and some p.(W.op) & Pop) implies p.(W.loc)' = Done
+            (p.(W.loc) = L6 and some p.(W.op) & Pop) implies p.(W.loc)' = Done
+        } else {
+            (p.(W.loc) = L4 and some p.(W.op) & Pop) implies after (p.(W.loc) in Error + L5)
+            (p.(W.loc) = L5 and some p.(W.op) & Pop) implies after (p.(W.loc) in Error + L6)
+            (p.(W.loc) = L6 and some p.(W.op) & Pop) implies after (p.(W.loc) = Done)
+        }
     }
 }
 
@@ -45,6 +55,7 @@ pred notFail[W:Con] {
 
 assert Incorrect { Linearizability[Buggy] }
 check Incorrect for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps expect 1
+// bug1 found with k=8
 
 assert Correct { Linearizability[Fixed] }
 check Correct for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps expect 0
