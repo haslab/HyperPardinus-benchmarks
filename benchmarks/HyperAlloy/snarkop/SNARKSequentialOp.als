@@ -159,12 +159,9 @@ pred popRight[W:Seq] {
 pred popRight2[W:Seq] {
     W.RightHat'=Dummy
     W.LeftHat'=Dummy
-	W.V' = W.V
-	W.R' = W.R
-	W.L' = W.L
---    no W.RightHat.(W.V)'
---    no W.RightHat.(W.L)'
---    no W.RightHat.(W.R)'
+    no W.RightHat.(W.V)'
+    no W.RightHat.(W.L)'
+    no W.RightHat.(W.R)'
     stutterNodes[W,Node-W.RightHat]
     W.op'=W.op
     W.ret'=True
@@ -173,12 +170,9 @@ pred popRight2[W:Seq] {
 pred popRight3[W:Seq] {
     W.RightHat'=W.RightHat.(W.L)
     W.LeftHat'=W.LeftHat
-	W.V' = W.V - W.RightHat -> Val
-	W.R' = W.R ++ W.RightHat -> Dummy
-	W.L' = W.L ++ W.RightHat -> W.RightHat
---    no W.RightHat.(W.V)'
---    no W.RightHat.(W.L)'
---    no W.RightHat.(W.R)'
+    no W.RightHat.(W.V)'
+    no W.RightHat.(W.L)'
+    no W.RightHat.(W.R)'
     stutterNodes[W,Node-W.RightHat]
     W.op'=W.op
     W.ret'=True
@@ -197,12 +191,9 @@ pred popLeft[W:Seq] {
 pred popLeft2[W:Seq] {
     W.LeftHat'=Dummy
     W.RightHat'=Dummy
-	W.V' = W.V
-	W.R' = W.R
-	W.L' = W.L
---    no W.LeftHat.(W.V)'
---    no W.LeftHat.(W.L)'
---    no W.LeftHat.(W.R)'
+    no W.LeftHat.(W.V)'
+    no W.LeftHat.(W.L)'
+    no W.LeftHat.(W.R)'
     stutterNodes[W,Node-W.LeftHat]
     W.op'=W.op
     W.ret'=True
@@ -211,12 +202,9 @@ pred popLeft2[W:Seq] {
 pred popLeft3[W:Seq] {
     W.RightHat'=W.RightHat
     W.LeftHat'=W.LeftHat.(W.R)
-	W.V' = W.V - W.LeftHat -> Val
-	W.R' = W.R ++ W.LeftHat -> W.LeftHat
-	W.L' = W.L ++ W.LeftHat -> Dummy
---    no W.LeftHat.(W.V)'
---    no W.LeftHat.(W.L)'
---    no W.LeftHat.(W.R)'
+    no W.LeftHat.(W.V)'
+    no W.LeftHat.(W.L)'
+    no W.LeftHat.(W.R)'
     stutterNodes[W,Node-W.LeftHat]
     W.op'=W.op
     W.ret'=True

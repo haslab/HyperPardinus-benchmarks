@@ -71,6 +71,7 @@ pred RunCon[W:Con,variant:Variant] {
     one p:Process {
         p.(W.loc)=L1
         some p.(W.op)
+        p.(W.op).(W._op) = PushLeft // hack to speed up?
         no (Process-p).(W.loc)
         no (Process-p).(W.op)
     }
@@ -930,21 +931,16 @@ pred popLeftFixedAtomic[W:Con,p:Process] { // var aux stands for lhR
     } else {
         (W.LeftHat)' = p.(W.aux)'
         (W.RightHat)' = W.RightHat
+        W.R' = W.R ++ W.LeftHat -> W.LeftHat
         isClaimed[(W.LeftHat).(W.V)] implies {
-            stutterGlobal[W]
-            p.(W.rh)' = p.(W.rh)
-            p.(W.nd)' = p.(W.nd)
-            no p.(W.result)'
+            W.V' = W.V
+            W.L' = W.L
+            noNextState[W,p]
             p.(W.loc)' = Error
         } else {
-            stutterHats[W]
-			W.V' = W.V
-			W.L' = W.L
-			W.R' = W.R ++ W.LeftHat -> W.LeftHat
---            freeNode[W,W.LeftHat] // we are not marking as claimed; other ops must consider empty nodes as claimed
-            p.(W.rh)' = p.(W.rh)
-            p.(W.nd)' = p.(W.nd)
-            p.(W.result)' = (W.LeftHat).(W.V)
+		    W.V' = W.V - W.LeftHat -> Val
+		    W.L' = W.L ++ W.LeftHat -> Dummy        
+            noNextState_result[W,p,(W.LeftHat).(W.V)]
             p.(W.loc)' = Done
         }
     }
