@@ -764,6 +764,10 @@ run Ok {
 
 
 pred Bug1[W:Con] {
+  some disj o1,o2,o3,o4:OpId {
+	W._op = o1 -> PushLeft + o2 -> PopRight + o3 -> PushRight + o4 -> PopLeft
+	W._ag = o1 -> (Val - Claimed) + o3 -> (Val - Claimed)
+  }
   some disj p1,p2:Process {
     loc[W][p1] = L1         and no loc[W][p2]         and op[W][p1].(W._op) = PushLeft;
     loc[W][p1] = Done       and no loc[W][p2];
@@ -785,7 +789,7 @@ run {
 run Bug1 {
   RunCon[Con,Buggy]
   Bug1[Con]
-} for 1..10 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
+} for 1..9 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
 
 run NoBug1 {
   RunCon[Con,Fixed]
