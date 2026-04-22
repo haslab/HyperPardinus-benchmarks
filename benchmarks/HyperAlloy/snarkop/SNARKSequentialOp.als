@@ -212,10 +212,10 @@ pred popLeft3[W:Seq] {
 }
 
 run { RunSeq[Seq]
-	  pushRight[Seq];no none;
-	  pushRight[Seq];no none;
-	  popRight[Seq];no none;
-      popRight[Seq];Seq.ret = True 
+	  pushLeft[Seq];Seq.ret = True ;
+	  pushRight[Seq];Seq.ret = True ;
+	  popRight[Seq];Seq.ret = True ;
+      popLeft[Seq];Seq.ret = True 
 } for 3 Val, 3 Node, 4 OpId
 
 run { RunSeq[Seq] and eventually popLeft[Seq] and Seq.ret' = True } for 3 Val, 2 Node, 3 OpId

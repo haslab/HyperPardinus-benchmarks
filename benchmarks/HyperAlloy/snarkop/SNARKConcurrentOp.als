@@ -23,7 +23,8 @@ trace sig Con { // Concurrent model
     
     // Process environment: to mediate call or return to an operation
     var op : Process -> lone OpId, // the operation
-	var log : Process -> set OpId,
+	var _log : set OpId, // a global log of terminated ops
+	var _pre : OpId -> set OpId, // a log of terminated ops at start time of each op
 
 	_op : OpId -> one Op,
     _ag : OpId -> lone Val,
@@ -61,10 +62,11 @@ pred RunCon[W:Con,variant:Variant] {
     W.R = Dummy -> Dummy
     W.LeftHat = Dummy
     W.RightHat = Dummy 
+	no W._log    
+	no W._pre
 
     // initialize processes
     all p:Process {
-		no p.(W.log)
         noState[W,p]
     }
     // one start
@@ -80,10 +82,10 @@ pred RunCon[W:Con,variant:Variant] {
     
     // transitions
     always {  
-        
         stutter[W] or reset[W,W.acting] or pushRightAtomic[W,W.acting] or pushLeftAtomic[W,W.acting] or popRight[W,W.acting,variant] or popLeftAtomic[W,W.acting,variant]
         all p2:Process-W.acting | stutterProcess[W,p2]
-		all p:Process | (some p.(W.loc)' and p.(W.loc)' in Done+Error) implies p.(W.log)' = p.(W.log) + p.(W.op) else p.(W.log)' = p.(W.log)
+		reset[W,W.acting] implies W._pre' = W._pre ++ (W.acting).(W.op)' -> (W._log)' else W._pre' = W._pre
+		W._log' = W._log + (W.loc.(Done+Error)).(W.op) // update the global log of finished processes
     }
 }
 
@@ -147,9 +149,8 @@ pred reset[W:Con,p:Process] { // exits an operation
     p.(W.loc) in Done+Error
     p.(W.loc)' = L1
     some p.(W.op)'
-	p.(W.op)' not in p.(W.log)
-	p.(W.log)' = p.(W.log) + p.(W.op)
-    noNextState[W,p] 
+	p.(W.op)' not in W._log
+	noNextState[W,p] 
 }
 
 pred isFull[W:Con] { 
@@ -739,34 +740,50 @@ pred CAS_lh_V[W:Con,p:Process,new:Val] {
   stutterEnv[W,p] 
 } 
 
+pred Ok[W:Con] {
+  some disj p1,p2:Process {
+    loc[W][p1] = L1         and no loc[W][p2]         and op[W][p1].(W._op) = PushLeft;
+    loc[W][p1] = Done       and no loc[W][p2];
+    loc[W][p1] = L1         and no loc[W][p2]         and op[W][p1].(W._op) = PopRight;
+    loc[W][p1] = L1         and loc[W][p2] = L1         and op[W][p2].(W._op) = PushRight;
+    loc[W][p1] = L1         and loc[W][p2] = Done;
+	loc[W][p1] = L1         and loc[W][p2] = L1         and op[W][p2].(W._op) = PopLeft;
+    loc[W][p1] = L1         and loc[W][p2] = Done;       
+    loc[W][p1] = L2         and loc[W][p2] = Done;
+    loc[W][p1] = L3      	and loc[W][p2] = Done;   
+    loc[W][p1] = L4      	and loc[W][p2] = Done;   
+    loc[W][p1] = Done      	and loc[W][p2] = Done   
+  }
+}
+
+run Ok {
+  RunCon[Con,Buggy]
+  Ok[Con]
+} for 1..12 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
+
+
+pred Bug1[W:Con] {
+  some disj p1,p2:Process {
+    loc[W][p1] = L1         and no loc[W][p2]         and op[W][p1].(W._op) = PushLeft;
+    loc[W][p1] = Done       and no loc[W][p2];
+    loc[W][p1] = L1         and no loc[W][p2]         and op[W][p1].(W._op) = PopRight;
+    loc[W][p1] = L2         and no loc[W][p2];
+    loc[W][p1] = L2         and loc[W][p2] = L1         and op[W][p2].(W._op) = PushRight;
+    loc[W][p1] = L2         and loc[W][p2] = Done;
+	loc[W][p1] = L2         and loc[W][p2] = L1         and op[W][p2].(W._op) = PopLeft;
+    loc[W][p1] = L2         and loc[W][p2] = Done;       
+    loc[W][p1] = Error      and loc[W][p2] = Done       
+  }
+}
+
 run Bug1 {
   RunCon[Con,Buggy]
-  some disj p1,p2:Process {
-    Con.loc[p1] = L1         and Con.loc[p2] = L1         and Con.op[p1].(Con._op) = PushLeft;
-    Con.loc[p1] = Done       and Con.loc[p2] = L1;
-    Con.loc[p1] = L1         and Con.loc[p2] = L1         and Con.op[p1].(Con._op) = PopRight;
-    Con.loc[p1] = L2         and Con.loc[p2] = L1;
-    Con.loc[p1] = L2         and Con.loc[p2] = L1         and Con.op[p2].(Con._op) = PushRight;
-    Con.loc[p1] = L2         and Con.loc[p2] = Done;
-	Con.loc[p1] = L2         and Con.loc[p2] = L1         and Con.op[p2].(Con._op) = PopLeft;
-    Con.loc[p1] = L2         and Con.loc[p2] = Done;       
-    Con.loc[p1] = Error      and Con.loc[p2] = Done       
-  }
-} for 1..9 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
+  Bug1[Con]
+} for 1..10 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
 
 run NoBug1 {
   RunCon[Con,Fixed]
-  some disj p1,p2:Process {
-    Con.loc[p1] = L1         and Con.loc[p2] = L1         and Con.op[p1].(Con._op) = PushLeft;
-    Con.loc[p1] = Done       and Con.loc[p2] = L1;
-    Con.loc[p1] = L1         and Con.loc[p2] = L1         and Con.op[p1].(Con._op) = PopRight;
-    Con.loc[p1] = L2         and Con.loc[p2] = L1;
-    Con.loc[p1] = L2         and Con.loc[p2] = L1         and Con.op[p2].(Con._op) = PushRight;
-    Con.loc[p1] = L2         and Con.loc[p2] = Done;
-	Con.loc[p1] = L2         and Con.loc[p2] = L1         and Con.op[p2].(Con._op) = PopLeft;
-    Con.loc[p1] = L2         and Con.loc[p2] = Done;       
-    Con.loc[p1] = Error      and Con.loc[p2] = Done       
-  }
+  Bug1[Con]
 } for 1..9 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 0
 
 run EmptyNeverEmptyBuggy {

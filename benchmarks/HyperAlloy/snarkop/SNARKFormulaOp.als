@@ -5,11 +5,44 @@ open SNARKSharedOp as V
 open SNARKConcurrentOp as C
 open SNARKSequentialOp as S
 
+run Ok {
+  RunCon[Con,Buggy]
+  Ok[Con]
+  RunSeq[Seq]
+  sameOps[Con,Seq]
+  always precedes[Con,Seq]
+
+} for 1..12 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
+
+run Bug1 {
+  RunCon[Con,Buggy]
+  Bug1[Con]
+  RunSeq[Seq]
+  sameOps[Con,Seq]
+  always precedes[Con,Seq]
+} for 1..12 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
+
+
+
 pred Linearizability[vari:C/Variant] {
   all A:C/Con | RunCon[A,vari] implies
-    some B:S/Seq | RunSeq[B] and sameOps[A,B] and
-      always (sameHistory[A,B])
+    some B:S/Seq | RunSeq[B] and sameOps[A,B] and always precedes[A,B]
+--      always (sameHistory[A,B])
       //and all op1:OpId, op2 : OpId | samePrecedes[op1,op2,A,B]
+}
+
+pred precedes[A:C/Con,B:S/Seq] {
+	all p : Process {
+		{
+			p.(A.loc) not in Done+Error
+			p.(A.loc)' in Done+Error
+		} implies {
+			B.op = p.(A.op)
+			p.(A.loc)' in Done+Error
+			p.(A.loc)' = Done iff B.ret' = True
+			p.(A.op).(A._pre)' in B.log'
+		}
+	}
 }
 
 pred sameOps[A:C/Con,B:S/Seq] {
@@ -17,9 +50,9 @@ pred sameOps[A:C/Con,B:S/Seq] {
 	A._ag = B._ag
 }
 
-pred sameHistory[A:C/Con,B:S/Seq] {
+/*pred sameHistory[A:C/Con,B:S/Seq] {
     Process.(A.loc) in Done+Error implies Process.(A.log) = B.log
-}
+}*/
 
 pred samePrecedes[op1 : one OpId, op2 : one OpId, A:C/Con , B:S/Seq] {
     (some p : Process | p.(A.op) = op1 and some p.(A.loc) and p.(A.loc) in Done+Error and after (eventually p.(A.op) = op2)) implies {
