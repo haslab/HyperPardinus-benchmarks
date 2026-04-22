@@ -621,28 +621,6 @@ val popRight() {
     }
 }
 */
-pred popRightFixedAtomic[W:Con,p:Process] { // var aux stands for rhL
-    p.(W.loc)=L1
-    stutterEnv[W,p]
-    (W.RightHat).(W.R) = (W.RightHat) implies {
-        stutterGlobal[W]
-        noNextState[W,p]
-        p.(W.loc)' = Error
-    } else {
-        (W.RightHat)' = (W.RightHat).(W.L)
-        (W.LeftHat)' = W.LeftHat
-        isClaimed[(W.RightHat).(W.V)] implies {
-            stutterGlobal[W]
-            noNextState[W,p]
-            p.(W.loc)' = Error
-        } else {
-            stutterHats[W]
-            freeNode[W,W.RightHat] // we are not marking as claimed; other ops must consider empty nodes as claimed
-            noNextState_result[W,p,(W.RightHat).(W.V)]
-            p.(W.loc)' = Done
-        }
-    }
-}
 pred popRightFixed[W:Con,p:Process] { // var aux stands for rhL
     p.(W.loc)=L1 implies {
         stutterEnv[W,p]
