@@ -763,6 +763,34 @@ run Ok {
 } for 1..12 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
 
 
+pred bug1State0[W:Con,p1:Process,p2:Process] {
+    loc[W][p1] = L1         and no loc[W][p2]         and op[W][p1].(W._op) = PushLeft
+}
+pred bug1State1[W:Con,p1:Process,p2:Process] {
+    loc[W][p1] = Done       and no loc[W][p2]
+}
+pred bug1State2[W:Con,p1:Process,p2:Process] {
+    loc[W][p1] = L1         and no loc[W][p2]         and op[W][p1].(W._op) = PopRight
+}
+pred bug1State3[W:Con,p1:Process,p2:Process] {
+    loc[W][p1] = L2         and no loc[W][p2]
+}
+pred bug1State4[W:Con,p1:Process,p2:Process] {
+    loc[W][p1] = L2         and loc[W][p2] = L1         and op[W][p2].(W._op) = PushRight
+}
+pred bug1State5[W:Con,p1:Process,p2:Process] {
+    loc[W][p1] = L2         and loc[W][p2] = Done
+}
+pred bug1State6[W:Con,p1:Process,p2:Process] {
+    loc[W][p1] = L2         and loc[W][p2] = L1         and op[W][p2].(W._op) = PopLeft
+}
+pred bug1State7[W:Con,p1:Process,p2:Process] {
+    loc[W][p1] = L2         and loc[W][p2] = Done
+}
+pred bug1State8[W:Con,p1:Process,p2:Process] {
+    loc[W][p1] = Error      and loc[W][p2] = Done       
+}
+
 pred Bug1[W:Con] {
   some disj o1,o2,o3,o4:OpId {
 	o1.(W._op) = PushLeft 
@@ -774,6 +802,7 @@ pred Bug1[W:Con] {
 	o3.(W._ag) = Val - Claimed
 	no o4.(W._ag)
   }
+  /*
   some disj p1,p2:Process {
     loc[W][p1] = L1         and no loc[W][p2]         and op[W][p1].(W._op) = PushLeft;
     loc[W][p1] = Done       and no loc[W][p2];
@@ -785,6 +814,18 @@ pred Bug1[W:Con] {
     loc[W][p1] = L2         and loc[W][p2] = Done;       
     loc[W][p1] = Error      and loc[W][p2] = Done       
   }
+  */
+    some disj p1,p2:Process {
+        bug1State0[W,p1,p2]
+        always (bug1State0[W,p1,p2] implies after bug1State1[W,p1,p2])
+        always (bug1State1[W,p1,p2] implies after bug1State2[W,p1,p2])
+        always (bug1State2[W,p1,p2] implies after bug1State3[W,p1,p2])
+        always (bug1State3[W,p1,p2] implies after bug1State4[W,p1,p2])
+        always (bug1State4[W,p1,p2] implies after bug1State5[W,p1,p2])
+        always (bug1State5[W,p1,p2] implies after bug1State6[W,p1,p2])
+        always (bug1State6[W,p1,p2] implies after bug1State7[W,p1,p2])
+        always (bug1State7[W,p1,p2] implies after bug1State8[W,p1,p2])
+    }
 }
 
 run {

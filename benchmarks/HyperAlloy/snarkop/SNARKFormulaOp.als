@@ -7,7 +7,7 @@ open SNARKSequentialOp as S
 
 
 pred Linearizability[vari:C/Variant] {
-  all A:C/Con | RunCon[A,vari] implies
+  all A:C/Con | RunCon[A,vari] implies Bug1[A] implies
     some B:S/Seq | RunSeq[B] and sameOps[A,B] and always precedes[A,B]
 }
 
