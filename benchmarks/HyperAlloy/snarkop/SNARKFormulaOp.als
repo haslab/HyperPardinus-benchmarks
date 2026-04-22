@@ -11,8 +11,7 @@ run Ok {
   RunSeq[Seq]
   sameOps[Con,Seq]
   always precedes[Con,Seq]
-
-} for 1..12 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
+} for 1..16 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
 
 run Bug1 {
   RunCon[Con,Buggy]
@@ -20,29 +19,19 @@ run Bug1 {
   RunSeq[Seq]
   sameOps[Con,Seq]
   always precedes[Con,Seq]
-} for 1..12 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
-
-
+} for 1..16 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 0
 
 pred Linearizability[vari:C/Variant] {
   all A:C/Con | RunCon[A,vari] implies
     some B:S/Seq | RunSeq[B] and sameOps[A,B] and always precedes[A,B]
---      always (sameHistory[A,B])
-      //and all op1:OpId, op2 : OpId | samePrecedes[op1,op2,A,B]
 }
 
 pred precedes[A:C/Con,B:S/Seq] {
-	all p : Process {
-		{
-			p.(A.loc) not in Done+Error
-			p.(A.loc)' in Done+Error
-		} implies {
-			B.op = p.(A.op)
-			p.(A.loc)' in Done+Error
-			p.(A.loc)' = Done iff B.ret' = True
-			p.(A.op).(A._pre)' in B.log'
+	Process.(A.loc) in Done+Error implies // stable point
+		{ 
+			A._log = B.log
+			all o:A._log.Bool | o.(A._pre) in o.*(OpId <: prev)
 		}
-	}
 }
 
 pred sameOps[A:C/Con,B:S/Seq] {

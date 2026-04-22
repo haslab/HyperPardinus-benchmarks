@@ -1,3 +1,4 @@
+
 open SNARKSharedOp
 
 abstract sig LoC {}
@@ -7,7 +8,7 @@ abstract sig Variant {}
 one sig Buggy, Fixed extends Variant {}
 
 // Node *Dummy, *LeftHat, *RightHat;
-trace sig Con { // Concurrent model
+one sig Con { // Concurrent modell
 
     // selected process
     var acting : one Process,
@@ -23,7 +24,7 @@ trace sig Con { // Concurrent model
     
     // Process environment: to mediate call or return to an operation
     var op : Process -> lone OpId, // the operation
-	var _log : set OpId, // a global log of terminated ops
+	var _log : OpId -> lone Bool, // a global log of terminated ops
 	var _pre : OpId -> set OpId, // a log of terminated ops at start time of each op
 
 	_op : OpId -> one Op,
@@ -84,8 +85,8 @@ pred RunCon[W:Con,variant:Variant] {
     always {  
         stutter[W] or reset[W,W.acting] or pushRightAtomic[W,W.acting] or pushLeftAtomic[W,W.acting] or popRight[W,W.acting,variant] or popLeftAtomic[W,W.acting,variant]
         all p2:Process-W.acting | stutterProcess[W,p2]
-		reset[W,W.acting] implies W._pre' = W._pre ++ (W.acting).(W.op)' -> (W._log)' else W._pre' = W._pre
-		W._log' = W._log + (W.loc.(Done+Error)).(W.op) // update the global log of finished processes
+		reset[W,W.acting] implies W._pre' = W._pre ++ (W.acting).(W.op)' -> (W._log)'.Bool else W._pre' = W._pre
+		W._log' = W._log + (W.loc.Done)'.(W.op) -> True + (W.loc.Error)'.(W.op) -> False // update the global log of finished processes
     }
 }
 
@@ -149,7 +150,7 @@ pred reset[W:Con,p:Process] { // exits an operation
     p.(W.loc) in Done+Error
     p.(W.loc)' = L1
     some p.(W.op)'
-	p.(W.op)' not in W._log
+	p.(W.op)' not in W._log.Bool + Process.(W.op)
 	noNextState[W,p] 
 }
 
@@ -775,6 +776,11 @@ pred Bug1[W:Con] {
     loc[W][p1] = Error      and loc[W][p2] = Done       
   }
 }
+
+run {
+	RunCon[Con,Buggy]
+	some o:OpId | o in Process.(Con.op) and eventually (o not in Process.(Con.op) and eventually o in Process.(Con.op))
+} for 1..10 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
 
 run Bug1 {
   RunCon[Con,Buggy]

@@ -1,3 +1,5 @@
+open util/ordering[OpId]
+open util/boolean
 sig OpId {}
 
 abstract sig Op {}

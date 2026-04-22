@@ -1,7 +1,7 @@
-open util/boolean
+
 open SNARKSharedOp
 
-trace sig Seq { // Sequential model
+one sig Seq { // Sequential model
   var LeftHat : lone Node,
   var RightHat : lone Node,
 
@@ -9,7 +9,7 @@ trace sig Seq { // Sequential model
   var retval : lone Val, // return value
 
   var op : one OpId, // the operation
-  var log : set OpId,
+  var log : OpId -> lone Bool,
 
   _op : OpId -> one Op,
   _ag : OpId -> lone Val,
@@ -35,7 +35,7 @@ pred RunSeq[W:Seq] {
     // transitions
     always {
         stutter[W] or reset[W] or pushRight[W] or pushLeft[W] or popRight[W] or popLeft[W]
-		some W.ret' implies W.log' = W.log + W.op else W.log' = W.log
+		some W.ret' implies W.log' = W.log + W.op -> W.ret' else W.log' = W.log
     }
 }
 
@@ -53,8 +53,7 @@ pred reset[W:Seq] { // calls a new operation
     some W.ret
     no W.ret'
     no W.retval'
-	W.op' not in W.log
-    (W.log)' = (W.log) + (W.op)
+	W.op' = W.op.next
 }
 
 pred fail[W:Seq] { // return failure
