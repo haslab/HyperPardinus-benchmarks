@@ -5,21 +5,6 @@ open SNARKSharedOp as V
 open SNARKConcurrentOp as C
 open SNARKSequentialOp as S
 
-run Ok {
-  RunCon[Con,Buggy]
-  Ok[Con]
-  RunSeq[Seq]
-  sameOps[Con,Seq]
-  always precedes[Con,Seq]
-} for 1..16 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
-
-run Bug1 {
-  RunCon[Con,Buggy]
-  Bug1[Con]
-  RunSeq[Seq]
-  sameOps[Con,Seq]
-  always precedes[Con,Seq]
-} for 1..16 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 0
 
 pred Linearizability[vari:C/Variant] {
   all A:C/Con | RunCon[A,vari] implies
@@ -30,7 +15,7 @@ pred precedes[A:C/Con,B:S/Seq] {
 	Process.(A.loc) in Done+Error implies // stable point
 		{ 
 			A._log = B.log
-			all o:A._log.Bool | o.(A._pre) in o.*(OpId <: prev)
+		 	A._pre in B.pre
 		}
 }
 
@@ -54,3 +39,24 @@ check Incorrect for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps, 
 
 assert Correct { Linearizability[Fixed] }
 check Correct for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps, exactly  3 OpId expect 0
+
+/*
+
+run Ok {
+  RunCon[Con,Buggy]
+  Ok[Con]
+  RunSeq[Seq]
+  sameOps[Con,Seq]
+
+  eventually (some Seq.pre and precedes[Con,Seq])
+} for 1..16 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 1
+
+run Bug1 {
+  RunCon[Con,Buggy]
+  Bug1[Con]
+  RunSeq[Seq]
+  sameOps[Con,Seq]
+  always precedes[Con,Seq]
+} for 1..16 steps, 3 Val, 3 Node, 2 Process, 4 OpId expect 0
+
+*/

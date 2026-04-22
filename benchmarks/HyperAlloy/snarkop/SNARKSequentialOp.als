@@ -1,7 +1,7 @@
 
 open SNARKSharedOp
 
-one sig Seq { // Sequential model
+trace sig Seq { // Sequential model
   var LeftHat : lone Node,
   var RightHat : lone Node,
 
@@ -10,6 +10,7 @@ one sig Seq { // Sequential model
 
   var op : one OpId, // the operation
   var log : OpId -> lone Bool,
+  var pre : OpId -> set OpId, // a log of terminated ops at start time of each op
 
   _op : OpId -> one Op,
   _ag : OpId -> lone Val,
@@ -28,7 +29,7 @@ pred RunSeq[W:Seq] {
     Dummy.(W.R) = Dummy
     W.LeftHat = Dummy
     W.RightHat = Dummy
-    no W.ret and no W.retval and no W.log
+    no W.ret and no W.retval and no W.log and no W.pre
 
 	W._ag in (W._op).Push -> one (Val - Claimed)
 
@@ -36,6 +37,8 @@ pred RunSeq[W:Seq] {
     always {
         stutter[W] or reset[W] or pushRight[W] or pushLeft[W] or popRight[W] or popLeft[W]
 		some W.ret' implies W.log' = W.log + W.op -> W.ret' else W.log' = W.log
+		no W.ret implies W.pre' = W.pre ++ W.op -> W.log.Bool else W.pre' = W.pre
+
     }
 }
 
@@ -53,7 +56,7 @@ pred reset[W:Seq] { // calls a new operation
     some W.ret
     no W.ret'
     no W.retval'
-	W.op' = W.op.next
+	W.op' not in W.log.Bool
 }
 
 pred fail[W:Seq] { // return failure

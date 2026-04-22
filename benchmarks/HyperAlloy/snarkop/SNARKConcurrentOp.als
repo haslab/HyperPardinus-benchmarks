@@ -8,7 +8,7 @@ abstract sig Variant {}
 one sig Buggy, Fixed extends Variant {}
 
 // Node *Dummy, *LeftHat, *RightHat;
-one sig Con { // Concurrent modell
+trace sig Con { // Concurrent modell
 
     // selected process
     var acting : one Process,
