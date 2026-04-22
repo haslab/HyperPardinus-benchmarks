@@ -765,8 +765,14 @@ run Ok {
 
 pred Bug1[W:Con] {
   some disj o1,o2,o3,o4:OpId {
-	W._op = o1 -> PushLeft + o2 -> PopRight + o3 -> PushRight + o4 -> PopLeft
-	W._ag = o1 -> (Val - Claimed) + o3 -> (Val - Claimed)
+	o1.(W._op) = PushLeft 
+	o2.(W._op) = PopRight
+    o3.(W._op) = PushRight
+    o4.(W._op) = PopLeft
+	o1.(W._ag) = Val - Claimed
+	no o2.(W._ag)
+	o3.(W._ag) = Val - Claimed
+	no o4.(W._ag)
   }
   some disj p1,p2:Process {
     loc[W][p1] = L1         and no loc[W][p2]         and op[W][p1].(W._op) = PushLeft;
