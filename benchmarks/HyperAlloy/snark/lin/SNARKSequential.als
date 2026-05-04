@@ -1,5 +1,5 @@
 
-open SNARKSharedOp
+open SNARKShared
 
 trace sig Seq { // Sequential model
   var LeftHat : lone Node,

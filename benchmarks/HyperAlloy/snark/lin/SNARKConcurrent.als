@@ -1,5 +1,5 @@
 
-open SNARKSharedOp
+open SNARKShared
 
 abstract sig LoC {}
 one sig L1,L2,L3,L4,L5,L6,Done,Error extends LoC {}
@@ -136,6 +136,13 @@ pred stutterState[W:Con,p:Process] {
     p.(W.lh)' = p.(W.lh)
     p.(W.aux)' = p.(W.aux)
     p.(W.result)' = p.(W.result)
+}
+pred stutterState_result[W:Con,p:Process,v:lone Val] { 
+    p.(W.nd)' = p.(W.nd)
+    p.(W.rh)' = p.(W.rh)
+    p.(W.lh)' = p.(W.lh)
+    p.(W.aux)' = p.(W.aux)
+    p.(W.result)' = v
 }
 
 pred stutterProcess[W:Con,p:Process] { 
@@ -515,18 +522,11 @@ pred popRightFixed[W:Con,p:Process] { // var aux stands for rhL
     p.(W.loc)=L4 implies { 
         stutterGlobal[W]
         stutterEnv[W,p] 
-        p.(W.result)' = p.(W.rh).(W.V)
-        isClaimed[p.(W.result)'] implies {
-            p.(W.nd)' = p.(W.nd)
-            p.(W.lh)' = p.(W.lh)
-            p.(W.rh)' = p.(W.rh)
-            p.(W.aux)' = p.(W.aux) 
+        isClaimed[p.(W.rh).(W.V)] implies {
+            noNextState_result[W,p,p.(W.rh).(W.V)]
             p.(W.loc)' = Error
         } else {
-            p.(W.nd)' = p.(W.nd)
-            p.(W.lh)' = p.(W.lh)
-            p.(W.rh)' = p.(W.rh)
-            p.(W.aux)' = p.(W.aux) 
+            stutterState_result[W,p,p.(W.rh).(W.V)]
             p.(W.loc)' = L5
         }
     }
@@ -544,13 +544,11 @@ pred popRightFixed[W:Con,p:Process] { // var aux stands for rhL
     
     p.(W.loc)=L6 implies {
         stutterHats[W]
-        //assignNode_R[W,p,p.(W.rh),Dummy]
---        freeNode[W,p.(W.rh)]
-		W.V' = W.V
-		W.R' = W.R
-		W.L' = W.L ++ p.(W.rh) -> p.(W.rh)
-
-        stepProcess[W,p,Done]
+		W.V' = W.V - p.(W.rh) -> Val
+		W.R' = W.R ++ p.(W.rh) -> Dummy
+		W.L' = W.L
+        noNextState[W,p]
+        p.(W.loc)' = Done
     }
 }
 
@@ -640,16 +638,12 @@ val popLeft() {
 pred popLeftFixedAtomic[W:Con,p:Process] { // var aux stands for lhR
     p.(W.loc)=L1 
     stutterEnv[W,p]
-    p.(W.lh)' = W.LeftHat
-    p.(W.aux)' = (W.LeftHat).(W.R)
     (W.LeftHat).(W.L) = (W.LeftHat) implies {
         stutterGlobal[W]
-        p.(W.rh)' = p.(W.rh)
-        p.(W.nd)' = p.(W.nd)
-        p.(W.result)' = p.(W.result) 
+        noNextState[W,p]
         p.(W.loc)' = Error
     } else {
-        (W.LeftHat)' = p.(W.aux)'
+        (W.LeftHat)' = (W.LeftHat).(W.R)
         (W.RightHat)' = W.RightHat
         W.R' = W.R ++ W.LeftHat -> W.LeftHat
         isClaimed[(W.LeftHat).(W.V)] implies {
@@ -767,25 +761,25 @@ pred bug1State0[W:Con,p1:Process,p2:Process] {
     loc[W][p1] = L1         and no loc[W][p2]         and op[W][p1].(W._op) = PushLeft
 }
 pred bug1State1[W:Con,p1:Process,p2:Process] {
-    loc[W][p1] = Done       and no loc[W][p2]
+    loc[W][p1] = Done       and no loc[W][p2] and op[W][p1].(W._op) = PushLeft
 }
 pred bug1State2[W:Con,p1:Process,p2:Process] {
-    loc[W][p1] = L1         and no loc[W][p2]         and op[W][p1].(W._op) = PopRight
+    loc[W][p1] = L1         and no loc[W][p2]      and op[W][p1].(W._op) = PopRight
 }
 pred bug1State3[W:Con,p1:Process,p2:Process] {
-    loc[W][p1] = L2         and no loc[W][p2]
+    loc[W][p1] = L2         and no loc[W][p2] and op[W][p1].(W._op) = PopRight
 }
 pred bug1State4[W:Con,p1:Process,p2:Process] {
-    loc[W][p1] = L2         and loc[W][p2] = L1         and op[W][p2].(W._op) = PushRight
+    loc[W][p1] = L2         and loc[W][p2] = L1        and op[W][p2].(W._op) = PushRight
 }
 pred bug1State5[W:Con,p1:Process,p2:Process] {
-    loc[W][p1] = L2         and loc[W][p2] = Done
+    loc[W][p1] = L2         and loc[W][p2] = Done and op[W][p2].(W._op) = PushRight
 }
 pred bug1State6[W:Con,p1:Process,p2:Process] {
-    loc[W][p1] = L2         and loc[W][p2] = L1         and op[W][p2].(W._op) = PopLeft
+    loc[W][p1] = L2         and loc[W][p2] = L1      and op[W][p2].(W._op) = PopLeft
 }
 pred bug1State7[W:Con,p1:Process,p2:Process] {
-    loc[W][p1] = L2         and loc[W][p2] = Done
+    loc[W][p1] = L2         and loc[W][p2] = Done and op[W][p2].(W._op) = PopLeft   
 }
 pred bug1State8[W:Con,p1:Process,p2:Process] {
     loc[W][p1] = Error      and loc[W][p2] = Done       
@@ -804,14 +798,14 @@ pred Bug1[W:Con] {
   }
   /*
   some disj p1,p2:Process {
-    loc[W][p1] = L1         and no loc[W][p2]         and op[W][p1].(W._op) = PushLeft;
-    loc[W][p1] = Done       and no loc[W][p2];
-    loc[W][p1] = L1         and no loc[W][p2]         and op[W][p1].(W._op) = PopRight;
-    loc[W][p1] = L2         and no loc[W][p2];
+    loc[W][p1] = L1         and no loc[W][p2]           and op[W][p1].(W._op) = PushLeft;
+    loc[W][p1] = Done       and no loc[W][p2]           and op[W][p1].(W._op) = PushLeft;
+    loc[W][p1] = L1         and no loc[W][p2]           and op[W][p1].(W._op) = PopRight;
+    loc[W][p1] = L2         and no loc[W][p2]           and op[W][p1].(W._op) = PopRight;
     loc[W][p1] = L2         and loc[W][p2] = L1         and op[W][p2].(W._op) = PushRight;
-    loc[W][p1] = L2         and loc[W][p2] = Done;
+    loc[W][p1] = L2         and loc[W][p2] = Done       and op[W][p2].(W._op) = PushRight;
 	loc[W][p1] = L2         and loc[W][p2] = L1         and op[W][p2].(W._op) = PopLeft;
-    loc[W][p1] = L2         and loc[W][p2] = Done;       
+    loc[W][p1] = L2         and loc[W][p2] = Done       and op[W][p2].(W._op) = PopLeft;       
     loc[W][p1] = Error      and loc[W][p2] = Done       
   }
   */

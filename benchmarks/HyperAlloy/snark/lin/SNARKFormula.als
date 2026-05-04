@@ -1,13 +1,12 @@
 // DCAS is not a Silver Bullet for Nonblocking Algorithm Design
 // https://doi.org/10.1145/1007912.1007945
 
-open SNARKSharedOp as V
-open SNARKConcurrentOp as C
-open SNARKSequentialOp as S
-
+open SNARKShared as V
+open SNARKConcurrent as C
+open SNARKSequential as S
 
 pred Linearizability[vari:C/Variant] {
-  all A:C/Con | RunCon[A,vari] implies Bug1[A] implies
+  all A:C/Con | RunCon[A,vari] implies // Bug1[A] implies
     some B:S/Seq | RunSeq[B] and sameOps[A,B] and always precedes[A,B]
 }
 
@@ -35,10 +34,10 @@ pred samePrecedes[op1 : one OpId, op2 : one OpId, A:C/Con , B:S/Seq] {
 }
 
 assert Incorrect { Linearizability[Buggy] }
-check Incorrect for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps, exactly 4 OpId expect 1
+check Incorrect for exactly 2 Val, exactly 2 Process, exactly 3 Node, 8 steps, exactly 4 OpId expect 1
 
 assert Correct { Linearizability[Fixed] }
-check Correct for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps, exactly  3 OpId expect 0
+check Correct for exactly 2 Val, exactly 2 Process, exactly 3 Node, 8 steps, exactly 4 OpId expect 0
 
 /*
 

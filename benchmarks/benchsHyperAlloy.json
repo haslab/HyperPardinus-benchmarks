@@ -71,21 +71,21 @@
     { "prop" : "robot/robot_robust.als"
     , "cmd" : 1, "k" : 20, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=spot", "qbfOpts": " --splitformula=invar", "alloyOpts" : { "AutoHyper" : "--compositionoff" } },
     
-    "snarkop_incorrect":
-    { "prop" : "snarkop/SNARKFormulaOp.als"
-    , "cmd" : 0, "k" : 20, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=spot", "qbfOpts": " --splitformula=invar" },
+    "snark_seq_incorrect":
+    { "prop" : "snark/seq/SNARKFormula.als"
+    , "cmd" : 0, "k" : 8, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
     
-    "snarkop_correct":
-    { "prop" : "snarkop/SNARKFormulaOp.als"
-    , "cmd" : 1, "k" : 20, "sem" : "opt" , "expected" : true, "expectsWitness": false, "ahOpts" : "--ahsolver=spot", "qbfOpts": " --splitformula=invar" },
+    "snark_seq_correct":
+    { "prop" : "snark/seq/SNARKFormula.als"
+    , "cmd" : 1, "k" : 8, "sem" : "opt" , "expected" : true, "expectsWitness": false, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
     
-    "snark_incorrect":
-    { "prop" : "snark/SNARKFormula.als"
-    , "cmd" : 0, "k" : 20, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=spot", "qbfOpts": " --splitformula=invar" },
+    "snark_lin_incorrect":
+    { "prop" : "snark/lin/SNARKFormula.als"
+    , "cmd" : 0, "k" : 8, "sem" : "opt" , "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" },
     
-    "snark_correct":
-    { "prop" : "snark/SNARKFormula.als"
-    , "cmd" : 1, "k" : 20, "sem" : "opt" , "expected" : true, "expectsWitness": false, "ahOpts" : "--ahsolver=spot", "qbfOpts": " --splitformula=invar" }
+    "snark_lin_correct":
+    { "prop" : "snark/lin/SNARKFormula.als"
+    , "cmd" : 1, "k" : 8, "sem" : "opt" , "expected" : true, "expectsWitness": false, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 --splitformula=invar" }
     
     }
 }

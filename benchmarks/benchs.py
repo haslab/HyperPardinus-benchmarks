@@ -543,7 +543,9 @@ class LowBenchmarkGUI(BenchmarkGUI):
 class HighBenchmarkGUI(BenchmarkGUI):
     
     def __init__(self, stdscr, config):
-            super().__init__(stdscr, benchsHyperAlloy.keys(), ["AutoHyper","HyperQB","Exp-","Sym-","Exp","Sym"] ,config["nruns"])
+            allcols = ["AutoHyper","HyperQB","Exp-","Sym-","Exp","Sym"]
+            cols = [ col for col in allcols if config["col"] == col ]
+            super().__init__(stdscr, benchsHyperAlloy.keys(), cols ,config["nruns"])
             self.config = {**config, "path" : pathHyperAlloy }
             if not os.path.exists("logs"): os.makedirs("logs")
     

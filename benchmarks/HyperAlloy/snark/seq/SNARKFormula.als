@@ -5,7 +5,7 @@ open SNARKShared as V
 open SNARKConcurrent as C
 open SNARKSequential as S
 
-pred Linearizability[vari:C/Variant] {
+pred SequentialConsistency[vari:C/Variant] {
   all A:C/Con | RunCon[A,vari] implies always (notFail[A,vari] and noConsecutiveHistories[A]) implies
     some B:S/Seq | RunSeq[B] and
       always sameHistory[A,B]
@@ -51,12 +51,10 @@ pred notFail[W:Con,vari:C/Variant] {
     }
 }
 
-// not (p.(W.loc)=Error and some p.(W.op) & Push)
-
-assert Incorrect { Linearizability[Buggy] }
-check Incorrect for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps expect 1
+assert Incorrect { SequentialConsistency[Buggy] }
+check Incorrect for exactly 2 Val, exactly 2 Process, exactly 3 Node, 8 steps expect 1
 // bug1 found with k=8
 
-assert Correct { Linearizability[Fixed] }
-check Correct for exactly 2 Val, exactly 2 Process, exactly 3 Node, 30 steps expect 0
+assert Correct { SequentialConsistency[Fixed] }
+check Correct for exactly 2 Val, exactly 2 Process, exactly 3 Node, 8 steps expect 0
 
