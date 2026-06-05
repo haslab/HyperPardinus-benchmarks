@@ -1,80 +1,80 @@
 { "path": "AutoHyper"
 , "benchs" :
-    {
-    "bakery3_s1":
-    { "model" : ["bakery/bakery_3procs.smv","bakery/bakery_3procs.smv"]
-    , "prop" : "bakery/bakery_formula_S1_3proc.ah"
-    , "k" : 7, "sem" : "pes", "expected" : false, "expectsWitness": false, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "bakery3_s2":
-    { "model" : ["bakery/bakery_3procs.smv","bakery/bakery_3procs.smv"]
-    , "prop" : "bakery/bakery_formula_S2_3proc.ah"
-    , "k" : 12, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--aps=ddsmall --ahsolver=forq", "ahOptsWitness" : "--aps=ddsmall --ahsolver=forklift", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "bakery3_s3":
-    { "model" : ["bakery/bakery_3procs.smv","bakery/bakery_3procs.smv"]
-    , "prop" : "bakery/bakery_formula_S3_3proc.ah"
-    , "k" : 20, "sem" : "opt", "expected" : false, "expectsWitness": false, "ahOpts" : "--explicitsingles=true --aps=ddsmall --ahsolver=spot", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "bakery3_sym1":
-    { "model" : ["bakery/bakery_3procs.smv","bakery/bakery_3procs.smv"]
-    , "prop" : "bakery/bakery_formula_sym1_3proc.ah"
-    , "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "bakery3_sym2":
-    { "model" : ["bakery/bakery_3procs.smv","bakery/bakery_3procs.smv"]
-    , "prop" : "bakery/bakery_formula_sym2_3proc.ah"
-    , "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "bakery5_sym1":
-    { "model" : ["bakery/bakery_5procs.smv","bakery/bakery_5procs.smv"]
-    , "prop" : "bakery/bakery_formula_sym1_5proc.ah"
-    , "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "bakery5_sym2":
-    { "model" : ["bakery/bakery_5procs.smv","bakery/bakery_5procs.smv"]
-    , "prop" : "bakery/bakery_formula_sym2_5proc.ah"
-    , "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "mutant":
-    { "model" : ["mutation/mutation_testing.smv","mutation/mutation_testing.smv"]
-    , "prop" : "mutation/mutation_testing.ah"
-    , "k" : 8, "sem" : "pes", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "ni_correct":
-    { "model" : ["ni/NI_correct.smv","ni/NI_correct.smv"]
-    , "prop" : "ni/NI_formula.ah"
-    , "k" : 10, "sem" : "opt", "expected" : true, "expectsWitness": false, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "ni_incorrect":
-    { "model" : ["ni/NI_incorrect.smv","ni/NI_incorrect.smv"]
-    , "prop" : "ni/NI_formula.ah"
-    , "k" : 57, "sem" : "pes", "expected" : false, "expectsWitness": true, "ahOpts" : "--aps=ddsmall --ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "nrp_correct":
-    { "model" : ["nrp/NRP_correct.smv","nrp/NRP_correct.smv"]
-    , "prop" : "nrp/NRP_formula.ah"
-    , "k" : 15, "sem" : "opt", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "nrp_incorrect":
-    { "model" : ["nrp/NRP_incorrect.smv","nrp/NRP_incorrect.smv"]
-    , "prop" : "nrp/NRP_formula.ah"
-    , "k" : 15, "sem" : "pes", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "snark":
-    { "model" : ["snark/snark1_M1_concurrent.smv","snark/snark1_M2_sequential.smv"]
-    , "prop" : "snark/snark1_formula.ah"
-    , "k" : 26, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts": "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "robot_sp_100":
-    { "model" : ["robot/robotic_sp_100.smv","robot/robotic_sp_100.smv"]
-    , "prop" : "robot/robotic_sp_formula.ah"
-    , "k" : 20, "sem" : "opt", "expected" : true, "expectsWitness": true, "ahOpts" : "--explicitsingles=true --ahsolver=spot", "qbfOpts": "--maxddsize=2048" }    
-    ,
-    "robot_robustness_100":
-    { "model" : ["robot/robotic_robustness_100.smv","robot/robotic_robustness_100.smv"]
-    , "prop" : "robot/robotic_robustness_formula.ah"
-    , "cmd": 0, "k" : 20, "sem" : "opt", "expected" : true, "expectsWitness": true, "ahOpts" : "--explicitsingles=true --aps=ddsmall --ahsolver=forq", "ahOptsWitness" : "--explicitsingles=true --aps=ddsmall --ahsolver=forklift", "qbfOpts": "--maxddsize=2048" }
-    }
+ {
+ "bakery3_s1":
+ { "model" : ["bakery/bakery_3procs.smv","bakery/bakery_3procs.smv"]
+ , "prop" : "bakery/bakery_formula_S1_3proc.ah"
+ , "k" : 7, "sem" : "pes", "expected" : false, "expectsWitness": false, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "bakery3_s2":
+ { "model" : ["bakery/bakery_3procs.smv","bakery/bakery_3procs.smv"]
+ , "prop" : "bakery/bakery_formula_S2_3proc.ah"
+ , "k" : 12, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--aps=ddsmall --ahsolver=forq", "ahOptsWitness" : "--aps=ddsmall --ahsolver=forklift", "qbfOpts": "" }
+ ,
+ "bakery3_s3":
+ { "model" : ["bakery/bakery_3procs.smv","bakery/bakery_3procs.smv"]
+ , "prop" : "bakery/bakery_formula_S3_3proc.ah"
+ , "k" : 20, "sem" : "opt", "expected" : false, "expectsWitness": false, "ahOpts" : "--explicitsingles=true --aps=ddsmall --ahsolver=spot", "qbfOpts": "" }
+ ,
+ "bakery3_sym1":
+ { "model" : ["bakery/bakery_3procs.smv","bakery/bakery_3procs.smv"]
+ , "prop" : "bakery/bakery_formula_sym1_3proc.ah"
+ , "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "bakery3_sym2":
+ { "model" : ["bakery/bakery_3procs.smv","bakery/bakery_3procs.smv"]
+ , "prop" : "bakery/bakery_formula_sym2_3proc.ah"
+ , "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "bakery5_sym1":
+ { "model" : ["bakery/bakery_5procs.smv","bakery/bakery_5procs.smv"]
+ , "prop" : "bakery/bakery_formula_sym1_5proc.ah"
+ , "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "bakery5_sym2":
+ { "model" : ["bakery/bakery_5procs.smv","bakery/bakery_5procs.smv"]
+ , "prop" : "bakery/bakery_formula_sym2_5proc.ah"
+ , "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "mutant":
+ { "model" : ["mutation/mutation_testing.smv","mutation/mutation_testing.smv"]
+ , "prop" : "mutation/mutation_testing.ah"
+ , "k" : 8, "sem" : "pes", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "ni_correct":
+ { "model" : ["ni/NI_correct.smv","ni/NI_correct.smv"]
+ , "prop" : "ni/NI_formula.ah"
+ , "k" : 10, "sem" : "opt", "expected" : true, "expectsWitness": false, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "ni_incorrect":
+ { "model" : ["ni/NI_incorrect.smv","ni/NI_incorrect.smv"]
+ , "prop" : "ni/NI_formula.ah"
+ , "k" : 57, "sem" : "pes", "expected" : false, "expectsWitness": true, "ahOpts" : "--aps=ddsmall --ahsolver=forq", "qbfOpts": "" }
+ ,
+ "nrp_correct":
+ { "model" : ["nrp/NRP_correct.smv","nrp/NRP_correct.smv"]
+ , "prop" : "nrp/NRP_formula.ah"
+ , "k" : 15, "sem" : "opt", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "nrp_incorrect":
+ { "model" : ["nrp/NRP_incorrect.smv","nrp/NRP_incorrect.smv"]
+ , "prop" : "nrp/NRP_formula.ah"
+ , "k" : 15, "sem" : "pes", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "snark":
+ { "model" : ["snark/snark1_M1_concurrent.smv","snark/snark1_M2_sequential.smv"]
+ , "prop" : "snark/snark1_formula.ah"
+ , "k" : 26, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts": "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "robot_sp_100":
+ { "model" : ["robot/robotic_sp_100.smv","robot/robotic_sp_100.smv"]
+ , "prop" : "robot/robotic_sp_formula.ah"
+ , "k" : 20, "sem" : "opt", "expected" : true, "expectsWitness": true, "ahOpts" : "--explicitsingles=true --ahsolver=spot", "qbfOpts": "" } 
+ ,
+ "robot_robustness_100":
+ { "model" : ["robot/robotic_robustness_100.smv","robot/robotic_robustness_100.smv"]
+ , "prop" : "robot/robotic_robustness_formula.ah"
+ , "cmd": 0, "k" : 20, "sem" : "opt", "expected" : true, "expectsWitness": true, "ahOpts" : "--explicitsingles=true --aps=ddsmall --ahsolver=forq", "ahOptsWitness" : "--explicitsingles=true --aps=ddsmall --ahsolver=forklift", "qbfOpts": "" }
+ }
 }
 

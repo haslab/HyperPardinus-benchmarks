@@ -1,64 +1,64 @@
 { "path" : "AutoHyper"
 , "benchs" : {
-    
-    "bakery3_s1":
-    { "prop" : "bakery/bakery_formula_S1_3proc.als",
-    "cmd" : 0, "k" : 7, "sem" : "pes", "expected" : false, "expectsWitness" : false , "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048", "alloyOpts" : { "QBF" : "--compositionoff" } }
-    ,
-    "bakery3_s2":
-    { "prop" : "bakery/bakery_formula_S2_3proc.als"
-    , "cmd" : 0, "k" : 12, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--aps=ddsmall --ahsolver=forq", "ahOptsWitness" : "--aps=ddsmall --ahsolver=forklift", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "bakery3_s3":
-    { "prop" : "bakery/bakery_formula_S3_3proc.als"
-    , "cmd" : 0, "k" : 20, "sem" : "opt", "expected" : false, "expectsWitness": false, "ahOpts" : "--aps=ddsmall --ahsolver=spot", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "bakery3_sym1":
-    { "prop" : "bakery/bakery_formula_sym1_3proc.als"
-    , "cmd" : 0, "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "bakery3_sym2":
-    { "prop" : "bakery/bakery_formula_sym2_3proc.als"
-    , "cmd" : 0, "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "bakery5_sym1":
-    { "prop" : "bakery/bakery_formula_sym1_5proc.als"
-    , "cmd" : 0, "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "bakery5_sym2":
-    { "prop" : "bakery/bakery_formula_sym2_5proc.als"
-    , "cmd" : 0, "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "mutant":
-    { "prop" : "mutation/mutation_testing_formula.als"
-    , "cmd" : 0, "k" : 8, "sem" : "pes", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "ni_correct":
-    { "prop" : "ni/NI_correct_formula.als"
-    , "cmd" : 0, "k" : 10, "sem" : "opt", "expected" : true, "expectsWitness": false, "ahOpts" : "--aps=ddsmall --ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "ni_incorrect":
-    { "prop" : "ni/NI_incorrect_formula.als"
-    , "cmd" : 0, "k" : 57, "sem" : "pes", "expected" : false, "expectsWitness": true, "ahOpts" : "--aps=ddsmall --ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "nrp_correct":
-    { "prop" : "nrp/NRP_correct_formula.als"
-    , "cmd" : 0, "k" : 15, "sem" : "opt", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "nrp_incorrect":
-    { "prop" : "nrp/NRP_incorrect_formula.als"
-    , "cmd" : 0, "k" : 15, "sem" : "pes", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "snark":
-    { "prop" : "snark/snark1_formula.als"
-    , "cmd" : 0, "k" : 26, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048" }
-    ,
-    "robot_sp_100":
-    { "prop" : "robot/robotic_sp_formula.als"
-    , "cmd": 0, "k" : 20, "sem" : "opt", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "--maxddsize=2048 " }
-    ,
-    "robot_robustness_100":
-    { "prop" : "robot/robotic_robustness_formula.als"
-    , "cmd": 0, "k" : 20, "sem" : "opt", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "ahOptsWitness" : "--ahsolver=forklift", "qbfOpts": "--maxddsize=2048" }
-    }
+ 
+ "bakery3_s1":
+ { "prop" : "bakery/bakery_formula_S1_3proc.als",
+ "cmd" : 0, "k" : 7, "sem" : "pes", "expected" : false, "expectsWitness" : false , "ahOpts" : "--ahsolver=forq", "qbfOpts": "", "alloyOpts" : { "QBF" : "--compositionoff" } }
+ ,
+ "bakery3_s2":
+ { "prop" : "bakery/bakery_formula_S2_3proc.als"
+ , "cmd" : 0, "k" : 12, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--aps=ddsmall --ahsolver=forq", "ahOptsWitness" : "--aps=ddsmall --ahsolver=forklift", "qbfOpts": "" }
+ ,
+ "bakery3_s3":
+ { "prop" : "bakery/bakery_formula_S3_3proc.als"
+ , "cmd" : 0, "k" : 20, "sem" : "opt", "expected" : false, "expectsWitness": false, "ahOpts" : "--aps=ddsmall --ahsolver=spot", "qbfOpts": "" }
+ ,
+ "bakery3_sym1":
+ { "prop" : "bakery/bakery_formula_sym1_3proc.als"
+ , "cmd" : 0, "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "bakery3_sym2":
+ { "prop" : "bakery/bakery_formula_sym2_3proc.als"
+ , "cmd" : 0, "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "bakery5_sym1":
+ { "prop" : "bakery/bakery_formula_sym1_5proc.als"
+ , "cmd" : 0, "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "bakery5_sym2":
+ { "prop" : "bakery/bakery_formula_sym2_5proc.als"
+ , "cmd" : 0, "k" : 10, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "mutant":
+ { "prop" : "mutation/mutation_testing_formula.als"
+ , "cmd" : 0, "k" : 8, "sem" : "pes", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "ni_correct":
+ { "prop" : "ni/NI_correct_formula.als"
+ , "cmd" : 0, "k" : 10, "sem" : "opt", "expected" : true, "expectsWitness": false, "ahOpts" : "--aps=ddsmall --ahsolver=forq", "qbfOpts": "" }
+ ,
+ "ni_incorrect":
+ { "prop" : "ni/NI_incorrect_formula.als"
+ , "cmd" : 0, "k" : 57, "sem" : "pes", "expected" : false, "expectsWitness": true, "ahOpts" : "--aps=ddsmall --ahsolver=forq", "qbfOpts": "" }
+ ,
+ "nrp_correct":
+ { "prop" : "nrp/NRP_correct_formula.als"
+ , "cmd" : 0, "k" : 15, "sem" : "opt", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "nrp_incorrect":
+ { "prop" : "nrp/NRP_incorrect_formula.als"
+ , "cmd" : 0, "k" : 15, "sem" : "pes", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "snark":
+ { "prop" : "snark/snark1_formula.als"
+ , "cmd" : 0, "k" : 26, "sem" : "opt", "expected" : false, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "robot_sp_100":
+ { "prop" : "robot/robotic_sp_formula.als"
+ , "cmd": 0, "k" : 20, "sem" : "opt", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "qbfOpts": "" }
+ ,
+ "robot_robustness_100":
+ { "prop" : "robot/robotic_robustness_formula.als"
+ , "cmd": 0, "k" : 20, "sem" : "opt", "expected" : true, "expectsWitness": true, "ahOpts" : "--ahsolver=forq", "ahOptsWitness" : "--ahsolver=forklift", "qbfOpts": "" }
+ }
 }
