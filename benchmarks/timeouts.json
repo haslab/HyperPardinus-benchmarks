@@ -1,0 +1,78 @@
+{
+  "low": {
+    "AutoHyper": [],
+    "HyperQB": [],
+    "HyperSmvExp": [],
+    "HyperSmvSym": [],
+    "HyperPardinusExp": [],
+    "HyperPardinusSym": []
+  },
+  "high": {
+    "AutoHyper": [
+      "easychair_any_ni_1", "easychair_ndet_ni_1", "easychair_max_ni_1",
+      "easychair_any_gni_2", "easychair_ndet_gni_2", "easychair_max_gni_2",
+      "easychair_any_gni_3", "easychair_ndet_gni_3", "easychair_max_gni_3",
+      "robot_robust", "robot_enemies", "robot_two"
+    ],
+    "HyperQB": [
+      "easychair_any_ni_0", "easychair_ndet_ni_0", "easychair_max_ni_0",
+      "easychair_any_ni_1", "easychair_ndet_ni_1", "easychair_max_ni_1",
+      "easychair_any_gni_2", "easychair_ndet_gni_2", "easychair_max_gni_2",
+      "easychair_any_gni_3", "easychair_ndet_gni_3", "easychair_max_gni_3",
+      "robot_robust"
+    ],
+    "Exp-": [
+      "easychair_any_ni_0", "easychair_ndet_ni_0", "easychair_max_ni_0",
+      "easychair_any_ni_1", "easychair_ndet_ni_1", "easychair_max_ni_1",
+      "easychair_any_gni_2", "easychair_ndet_gni_2", "easychair_max_gni_2",
+      "easychair_any_gni_3", "easychair_ndet_gni_3", "easychair_max_gni_3",
+      "robot_enemies", "robot_robust", "robot_score", "robot_shortest", "robot_two"
+    ],
+    "Sym-": ["robot_two"],
+    "Exp": [
+      "easychair_any_ni_1", "easychair_ndet_ni_1", "easychair_max_ni_1",
+      "easychair_any_gni_3", "easychair_ndet_gni_3", "easychair_max_gni_3"
+    ],
+    "Sym": []
+  },
+  "ablation": {
+    "low": {
+      "C-Exp": [], "M-Exp": [], "S-Exp": [], "F-Exp": [], "I-Exp": [], "Exp": [],
+      "C-Sym": [], "M-Sym": [], "S-Sym": [], "F-Sym": [], "I-Sym": [], "Sym": []
+    },
+    "high": {
+      "Exp": [
+        "easychair_any_ni_1", "easychair_ndet_ni_1", "easychair_max_ni_1",
+        "easychair_any_gni_3", "easychair_ndet_gni_3", "easychair_max_gni_3"
+      ],
+      "C-Exp": [
+        "easychair_any_ni_1", "easychair_ndet_ni_1", "easychair_max_ni_1",
+        "easychair_any_gni_3", "easychair_ndet_gni_3", "easychair_max_gni_3"
+      ],
+      "M-Exp": [
+        "easychair_any_ni_1", "easychair_ndet_ni_1", "easychair_max_ni_1",
+        "easychair_any_gni_3", "easychair_ndet_gni_3", "easychair_max_gni_3",
+        "robot_enemies", "robot_robust", "robot_score", "robot_shortest", "robot_two"
+      ],
+      "S-Exp": [
+        "easychair_any_ni_1", "easychair_ndet_ni_1", "easychair_max_ni_1",
+        "easychair_any_gni_3", "easychair_ndet_gni_3", "easychair_max_gni_3"
+      ],
+      "F-Exp": [
+        "easychair_any_ni_1", "easychair_ndet_ni_1", "easychair_max_ni_1",
+        "easychair_any_gni_3", "easychair_ndet_gni_3", "easychair_max_gni_3",
+        "robot_robust", "robot_enemies", "robot_two"
+      ],
+      "I-Exp": [
+        "easychair_any_ni_1", "easychair_ndet_ni_1", "easychair_max_ni_1",
+        "easychair_any_gni_3", "easychair_ndet_gni_3", "easychair_max_gni_3"
+      ],
+      "Sym":   [],
+      "C-Sym": [],
+      "M-Sym": ["robot_two"],
+      "S-Sym": [],
+      "F-Sym": [],
+      "I-Sym": []
+    }
+  }
+}
